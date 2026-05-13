@@ -1,6 +1,6 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import ContactForm from "@/components/ContactForm";
-import { Mail, MapPin, Globe, Clock } from "lucide-react";
+import { Mail, MapPin, Globe, Clock, Phone } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 export default function Quote() {
@@ -8,12 +8,12 @@ export default function Quote() {
     <div className="flex flex-col min-h-screen pt-20">
       <Helmet>
         <title>Get a Quote | DiscoveryTech Hub</title>
-        <meta name="description" content="Request a free quote from DiscoveryTech Hub for web design, ICT training, graphic design, branding, and more." />
+        <meta name="description" content="Request a free quote from DiscoveryTech Hub. We offer web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond." />
         <link rel="canonical" href="https://discoverytechhub.com/quote" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://discoverytechhub.com/quote" />
         <meta property="og:title" content="Get a Quote | DiscoveryTech Hub" />
-        <meta property="og:description" content="Request a free quote from DiscoveryTech Hub for web design, ICT training, graphic design, branding, and more." />
+        <meta property="og:description" content="Request a free quote from DiscoveryTech Hub. We offer web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond." />
         <meta property="og:image" content="https://discoverytechhub.com/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -21,7 +21,7 @@ export default function Quote() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://discoverytechhub.com/quote" />
         <meta name="twitter:title" content="Get a Quote | DiscoveryTech Hub" />
-        <meta name="twitter:description" content="Request a free quote from DiscoveryTech Hub for web design, ICT training, graphic design, branding, and more." />
+        <meta name="twitter:description" content="Request a free quote from DiscoveryTech Hub. We offer web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="Get a Free Quote - DiscoveryTech Hub" />
       </Helmet>
@@ -62,6 +62,15 @@ export default function Quote() {
                 </div>
 
                 <div className="flex items-start gap-4">
+                  <Phone className="w-6 h-6 text-blue-300 flex-shrink-0 mt-1" />
+                  <div>
+                    <h4 className="font-bold mb-1">Phone</h4>
+                    <p className="text-blue-100">+234 904 746 5802</p>
+                    <p className="text-blue-100">+234 807 685 4730</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
                   <Globe className="w-6 h-6 text-blue-300 flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-bold mb-1">Website</h4>
@@ -73,7 +82,7 @@ export default function Quote() {
                   <MapPin className="w-6 h-6 text-blue-300 flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-bold mb-1">Location</h4>
-                    <p className="text-blue-100">Nigeria</p>
+                    <p className="text-blue-100">Abuja, Nigeria</p>
                   </div>
                 </div>
 

@@ -26,12 +26,12 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Helmet>
         <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
-        <meta name="description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria. Transform your business with us." />
+        <meta name="description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
         <link rel="canonical" href="https://discoverytechhub.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://discoverytechhub.com/" />
         <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-        <meta property="og:description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria. Transform your business with us." />
+        <meta property="og:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
         <meta property="og:image" content="https://discoverytechhub.com/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -39,27 +39,20 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://discoverytechhub.com/" />
         <meta name="twitter:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-        <meta name="twitter:description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria. Transform your business with us." />
+        <meta name="twitter:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="DiscoveryTech Hub - Your Digital Transformation Partner" />
       </Helmet>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh] bg-primary dark:bg-gray-950">
-        {/* Background Base Image */}
         <div className="absolute inset-0 z-0 opacity-30">
           <img src="/hero.jpg" alt="DiscoveryTech Hub Hero Background" className="w-full h-full object-cover" />
         </div>
-
-        {/* Futuristic Tech Circuit Overlay */}
         <div className="absolute inset-0 z-0 opacity-[0.10] mix-blend-overlay">
           <img src="/hero1.jpg" alt="Tech Overlay" className="w-full h-full object-cover" />
         </div>
-
-        {/* Global Dark Gradient */}
         <div className="absolute inset-0 z-0 bg-blue-900/70 dark:bg-gray-950/80 mix-blend-multiply"></div>
-
-        {/* Abstract background blobs */}
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-blue-600 rounded-full blur-[120px] opacity-40 z-0"></div>
         <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-indigo-600 rounded-full blur-[120px] opacity-30 z-0"></div>
 
@@ -74,13 +67,11 @@ export default function Home() {
                 Partner
               </h1>
             </AnimatedSection>
-
             <AnimatedSection delay={0.2}>
               <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Empowering businesses, organizations, and individuals with innovative, affordable, and high-quality technology solutions.
+                Empowering businesses, organizations, and individuals with innovative web design, ICT training, branding, and high-quality technology solutions.
               </p>
             </AnimatedSection>
-
             <AnimatedSection delay={0.4} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 to="/quote"
@@ -107,16 +98,15 @@ export default function Home() {
               <div className="aspect-square rounded-3xl border border-white dark:border-gray-700 shadow-2xl relative overflow-hidden flex items-end justify-center group">
                 <img
                   src="/image1.jpg"
-                  alt="End-to-End Solutions"
+                  alt="ICT Solutions and Web Design Services in Nigeria"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent dark:from-gray-950/90"></div>
-
                 <div className="glassmorphism p-6 m-8 rounded-2xl w-full max-w-sm text-center border-white z-10 shadow-xl backdrop-blur-md relative overflow-hidden transition-transform hover:-translate-y-2">
                   <div className="absolute top-0 right-0 w-16 h-16 bg-blue-100/50 rounded-full blur-xl"></div>
                   <MonitorSmartphone className="w-12 h-12 text-blue-600 mx-auto mb-4 relative z-10" />
                   <h3 className="text-xl font-bold font-jakarta mb-2 text-primary dark:text-white relative z-10">
-                    End-to-End Solutions
+                    End-to-End Digital Solutions
                   </h3>
                 </div>
               </div>
@@ -124,13 +114,13 @@ export default function Home() {
 
             <div className="w-full md:w-1/2">
               <AnimatedSection>
-                <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">About Us</h2>
-                <h3 className="text-4xl font-bold font-jakarta text-primary dark:text-white mb-6">Built for the digital age</h3>
+                <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">About DiscoveryTech Hub</h2>
+                <h3 className="text-4xl font-bold font-jakarta text-primary dark:text-white mb-6">Web Design & ICT Solutions Built for Nigeria</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-lg">
-                  DiscoveryTech Hub is a premier ICT solutions company operating at the intersection of technology, creativity, and education. We deliver end-to-end digital services designed to help our clients thrive in a fast-paced, technology-driven world.
+                  DiscoveryTech Hub is a premier ICT solutions company operating at the intersection of technology, creativity, and education. We deliver end-to-end digital services including web design, ICT training, graphic design, branding, and consultancy.
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-lg">
-                  From web development and branding to ICT training and consultancy, we provide everything you need under one roof.
+                  From web development and branding to ICT training and consultancy, we provide everything you need under one roof, serving businesses across Nigeria and beyond.
                 </p>
                 <Link
                   to="/about"
@@ -148,10 +138,9 @@ export default function Home() {
       <section className="py-24 relative overflow-hidden bg-white dark:bg-gray-950">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">Why Choose Us</h2>
-            <h3 className="text-3xl md:text-4xl font-bold font-jakarta text-primary dark:text-white">Your trusted technology partner</h3>
+            <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">Why Choose DiscoveryTech Hub</h2>
+            <h3 className="text-3xl md:text-4xl font-bold font-jakarta text-primary dark:text-white">Nigeria's Trusted ICT & Digital Solutions Partner</h3>
           </AnimatedSection>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {whyChooseUs.map((item, i) => (
               <AnimatedSection key={i} delay={i * 0.1}>
@@ -171,13 +160,12 @@ export default function Home() {
       <section className="py-24 bg-slate-50 dark:bg-gray-900 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <AnimatedSection className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">Our Process</h2>
-            <h3 className="text-4xl md:text-5xl font-bold font-jakarta text-primary dark:text-white mb-4">How We Make It Happen</h3>
+            <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">Our Web Design & ICT Service Process</h2>
+            <h3 className="text-4xl md:text-5xl font-bold font-jakarta text-primary dark:text-white mb-4">How We Deliver Technology Solutions</h3>
             <p className="text-slate-500 dark:text-slate-400 text-lg">
-              A clear process designed to feel supportive, transparent, and joyful from our first meeting to launch.
+              A clear, client-focused process for delivering web design, ICT training, branding, and consultancy services across Nigeria.
             </p>
           </AnimatedSection>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {process.map((step, i) => (
               <AnimatedSection key={i} delay={i * 0.1}>

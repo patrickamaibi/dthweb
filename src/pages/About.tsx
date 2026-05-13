@@ -26,12 +26,12 @@ export default function About() {
     <div className="flex flex-col min-h-screen pt-20">
       <Helmet>
         <title>About Us | DiscoveryTech Hub</title>
-        <meta name="description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria driving digital transformation through web design, ICT training, branding, and consultancy." />
+        <meta name="description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <link rel="canonical" href="https://discoverytechhub.com/about" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://discoverytechhub.com/about" />
         <meta property="og:title" content="About Us | DiscoveryTech Hub" />
-        <meta property="og:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria driving digital transformation through web design, ICT training, branding, and consultancy." />
+        <meta property="og:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <meta property="og:image" content="https://discoverytechhub.com/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -39,7 +39,7 @@ export default function About() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://discoverytechhub.com/about" />
         <meta name="twitter:title" content="About Us | DiscoveryTech Hub" />
-        <meta name="twitter:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria driving digital transformation through web design, ICT training, branding, and consultancy." />
+        <meta name="twitter:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="About DiscoveryTech Hub - ICT Solutions in Nigeria" />
       </Helmet>

@@ -19,8 +19,6 @@ function App() {
   // ====================== THEME SYSTEM ======================
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
 
-  // Load saved theme on mount (index.html already handled the visual apply,
-  // this just syncs the React state to match)
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
     if (savedTheme === 'dark' || savedTheme === 'light') {
@@ -30,7 +28,6 @@ function App() {
     }
   }, []);
 
-  // Listen for system preference changes when in "system" mode
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
@@ -42,7 +39,6 @@ function App() {
     return () => media.removeEventListener('change', handleChange);
   }, [theme]);
 
-  // Called by the toggle to change theme
   const setThemeMode = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
     if (newTheme === 'system') {
@@ -74,30 +70,10 @@ function App() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
-        <meta name="description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria." />
+        {/* Global fallback meta — pages override these via their own Helmet */}
         <meta name="robots" content="index, follow" />
         <meta name="author" content="DiscoveryTech Hub" />
-
-        {/* Open Graph */}
-        <meta property="og:type" content="website" />
         <meta property="og:site_name" content="DiscoveryTech Hub" />
-        <meta property="og:url" content="https://discoverytechhub.com/" />
-        <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-        <meta property="og:description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria." />
-        <meta property="og:image" content="https://discoverytechhub.com/og.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="DiscoveryTech Hub - Your Digital Transformation Partner" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@discoverytechhub" />
-        <meta name="twitter:url" content="https://discoverytechhub.com/" />
-        <meta name="twitter:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-        <meta name="twitter:description" content="DiscoveryTech Hub offers professional web design, ICT training, graphic design, branding, printing, and ICT consultancy services in Nigeria." />
-        <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
-        <meta name="twitter:image:alt" content="DiscoveryTech Hub - Your Digital Transformation Partner" />
       </Helmet>
 
       <Router>
@@ -109,7 +85,6 @@ function App() {
           <WhatsAppFloating />
           <Preloader />
 
-          {/* ✅ Pass theme + setter to Navbar */}
           <Navbar theme={theme} setThemeMode={setThemeMode} />
 
           <main className="flex-grow">
@@ -121,7 +96,6 @@ function App() {
             </Routes>
           </main>
 
-          {/* ✅ Pass theme + setter to Footer */}
           <Footer theme={theme} setThemeMode={setThemeMode} />
 
           {/* Cookie Banner */}

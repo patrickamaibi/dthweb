@@ -8,12 +8,12 @@ export default function Services() {
     <div className="flex flex-col min-h-screen pt-20">
       <Helmet>
         <title>Our Services | DiscoveryTech Hub</title>
-        <meta name="description" content="Explore our services including web design, graphic design, ICT training, branding, printing, and ICT consultancy in Nigeria." />
+        <meta name="description" content="Explore DiscoveryTech Hub's services — web design, graphic design, ICT training, branding, printing & consultancy for businesses in Nigeria and beyond." />
         <link rel="canonical" href="https://discoverytechhub.com/services" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://discoverytechhub.com/services" />
         <meta property="og:title" content="Our Services | DiscoveryTech Hub" />
-        <meta property="og:description" content="Explore our services including web design, graphic design, ICT training, branding, printing, and ICT consultancy in Nigeria." />
+        <meta property="og:description" content="Explore DiscoveryTech Hub's services — web design, graphic design, ICT training, branding, printing & consultancy for businesses in Nigeria and beyond." />
         <meta property="og:image" content="https://discoverytechhub.com/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -21,7 +21,7 @@ export default function Services() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://discoverytechhub.com/services" />
         <meta name="twitter:title" content="Our Services | DiscoveryTech Hub" />
-        <meta name="twitter:description" content="Explore our services including web design, graphic design, ICT training, branding, printing, and ICT consultancy in Nigeria." />
+        <meta name="twitter:description" content="Explore DiscoveryTech Hub's services — web design, graphic design, ICT training, branding, printing & consultancy for businesses in Nigeria and beyond." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="DiscoveryTech Hub Services - Web Design, ICT Training & More" />
       </Helmet>

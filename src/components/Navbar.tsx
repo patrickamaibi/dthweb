@@ -12,7 +12,6 @@ interface ThemeToggleProps {
 function ThemeToggle({ theme, setThemeMode }: ThemeToggleProps) {
   const [open, setOpen] = useState(false);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     if (!open) return;
     const handler = () => setOpen(false);
@@ -58,7 +57,6 @@ function ThemeToggle({ theme, setThemeMode }: ThemeToggleProps) {
 
   return (
     <div className="relative" onClick={(e) => e.stopPropagation()}>
-      {/* Button sized to match "Get Quote" pill height (py-2 = ~36px) */}
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Toggle theme"
@@ -122,7 +120,13 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
 
         {/* Logo */}
         <Link to="/" className="hover:opacity-80 transition-opacity">
-          <img src="/logonav.png" alt="DiscoveryTech Hub" className="h-10 w-auto object-contain" />
+          <img
+            src="/logonav.png"
+            alt="DiscoveryTech Hub"
+            width={160}
+            height={40}
+            className="h-10 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -146,13 +150,11 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
           >
             Get Quote
           </Link>
-          {/* Theme toggle — desktop */}
           <ThemeToggle theme={theme} setThemeMode={setThemeMode} />
         </nav>
 
         {/* Mobile: theme toggle + hamburger */}
         <div className="md:hidden flex items-center gap-1">
-          {/* Theme toggle — mobile */}
           <ThemeToggle theme={theme} setThemeMode={setThemeMode} />
           <button
             type="button"
@@ -197,7 +199,6 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                 </motion.div>
               ))}
 
-              {/* CTA Button */}
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -213,7 +214,6 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                 </Link>
               </motion.div>
 
-              {/* Close Button */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
