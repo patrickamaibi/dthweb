@@ -3,14 +3,9 @@
   "short_name": "DTH",
   "icons": [
     {
-      "src": "/dth1-rounded-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/dth1-rounded-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/dth1-rounded.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
   "theme_color": "#0d1f6e",
