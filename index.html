@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     
-    <!-- ✅ ANTI-FLASH (FOUC) PROTECTION - Must be the FIRST script in <head> -->
+    <!-- ✅ ANTI-FLASH (FOUC) PROTECTION -->
     <script>
       (function () {
         try {
@@ -26,27 +26,39 @@
     </script>
 
     <!-- ✅ FAVICON SUITE -->
-    <link rel="icon" type="image/svg+xml" href="/dth1.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/dth1-rounded.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/dth1-rounded-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/dth1-rounded-16x16.png" />
+    <link rel="shortcut icon" href="/dth1-rounded.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/dth1-rounded-180x180.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="web design Nigeria, ICT training, graphic design, branding, digital transformation, ICT consultancy, Abuja, DiscoveryTech Hub" />
+
+    <!-- SEO -->
+    <meta
+      name="keywords"
+      content="web design Nigeria, ICT training, graphic design, branding, digital transformation, ICT consultancy, Abuja, DiscoveryTech Hub"
+    />
     <meta name="robots" content="index, follow" />
 
-    <!-- Google Analytics - deferred for performance -->
+    <!-- Google Analytics -->
     <script>
-      window.addEventListener('load', function() {
+      window.addEventListener('load', function () {
         var s = document.createElement('script');
         s.src = 'https://www.googletagmanager.com/gtag/js?id=G-NCE7K80751';
         s.async = true;
         document.head.appendChild(s);
+
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
         gtag('config', 'G-NCE7K80751');
       });
@@ -54,89 +66,136 @@
 
     <!-- Primary Meta Tags -->
     <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
-    <meta name="description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
+
+    <meta
+      name="description"
+      content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today."
+    />
+
     <meta name="author" content="DiscoveryTech Hub" />
 
-    <!-- Open Graph / Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@discoverytechhub" />
-    <meta name="twitter:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-    <meta name="twitter:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
-    <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
+
+    <meta
+      name="twitter:title"
+      content="DiscoveryTech Hub | Your Digital Transformation Partner"
+    />
+
+    <meta
+      name="twitter:description"
+      content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today."
+    />
+
+    <meta
+      name="twitter:image"
+      content="https://discoverytechhub.com/og.png"
+    />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://discoverytechhub.com/" />
-    <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-    <meta property="og:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
-    <meta property="og:image" content="https://discoverytechhub.com/og.png" />
+
+    <meta
+      property="og:title"
+      content="DiscoveryTech Hub | Your Digital Transformation Partner"
+    />
+
+    <meta
+      property="og:description"
+      content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today."
+    />
+
+    <meta
+      property="og:image"
+      content="https://discoverytechhub.com/og.png"
+    />
 
     <!-- Schema Markup -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "DiscoveryTech Hub",
-      "alternateName": "DTH",
-      "description": "DiscoveryTech Hub offers web design, ICT training, graphic design, branding, and ICT consultancy in Nigeria and beyond.",
-      "url": "https://discoverytechhub.com",
-      "logo": "https://discoverytechhub.com/logo.png",
-      "image": "https://discoverytechhub.com/og.png",
-      "telephone": ["+2349047465802", "+2348076854730"],
-      "email": "info@discoverytechhub.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Abuja",
-        "addressRegion": "FCT",
-        "addressCountry": "NG"
-      },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+2349047465802",
-        "contactType": "customer service",
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "DiscoveryTech Hub",
+        "alternateName": "DTH",
+        "description": "DiscoveryTech Hub offers web design, ICT training, graphic design, branding, and ICT consultancy in Nigeria and beyond.",
+        "url": "https://discoverytechhub.com",
+        "logo": "https://discoverytechhub.com/logo.png",
+        "image": "https://discoverytechhub.com/og.png",
+        "telephone": ["+2349047465802", "+2348076854730"],
         "email": "info@discoverytechhub.com",
-        "areaServed": "NG",
-        "availableLanguage": "English"
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "Nigeria"
-      },
-      "serviceType": [
-        "Web Design & Development",
-        "ICT Training",
-        "Graphic Design",
-        "Branding",
-        "Printing",
-        "ICT Consultancy"
-      ],
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          "opens": "08:00",
-          "closes": "18:00"
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Abuja",
+          "addressRegion": "FCT",
+          "addressCountry": "NG"
         },
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": "Saturday",
-          "opens": "09:00",
-          "closes": "15:00"
-        }
-      ],
-      "sameAs": [
-        "https://www.instagram.com/distechhub",
-        "https://www.facebook.com/discoverytechhub"
-      ]
-    }
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+2349047465802",
+          "contactType": "customer service",
+          "email": "info@discoverytechhub.com",
+          "areaServed": "NG",
+          "availableLanguage": "English"
+        },
+        "areaServed": {
+          "@type": "Country",
+          "name": "Nigeria"
+        },
+        "serviceType": [
+          "Web Design & Development",
+          "ICT Training",
+          "Graphic Design",
+          "Branding",
+          "Printing",
+          "ICT Consultancy"
+        ],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday"
+            ],
+            "opens": "08:00",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "09:00",
+            "closes": "15:00"
+          }
+        ],
+        "sameAs": [
+          "https://www.instagram.com/distechhub",
+          "https://www.facebook.com/discoverytechhub"
+        ]
+      }
     </script>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  
+
   <body class="antialiased min-h-screen flex flex-col scroll-smooth">
     <div id="root" class="flex-grow flex flex-col"></div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
