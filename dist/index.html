@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    
+
     <!-- ✅ ANTI-FLASH (FOUC) PROTECTION -->
     <script>
       (function () {
@@ -26,9 +26,19 @@
 
     <!-- ✅ FAVICON SUITE -->
     <link rel="icon" type="image/svg+xml" href="/dth1-rounded.svg" />
-    <link rel="apple-touch-icon" href="/dth1-rounded.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- ✅ PWA THEME -->
+    <meta name="theme-color" content="#3b28cc" />
+    <meta name="msapplication-TileColor" content="#3b28cc" />
+    <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
     <!-- Viewport -->
@@ -37,20 +47,6 @@
     <!-- SEO -->
     <meta name="keywords" content="web design Nigeria, ICT training, graphic design, branding, digital transformation, ICT consultancy, Abuja, DiscoveryTech Hub" />
     <meta name="robots" content="index, follow" />
-
-    <!-- Google Analytics -->
-    <script>
-      window.addEventListener('load', function () {
-        var s = document.createElement('script');
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-NCE7K80751';
-        s.async = true;
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-NCE7K80751');
-      });
-    </script>
 
     <!-- Primary Meta Tags -->
     <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
@@ -70,6 +66,8 @@
     <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
     <meta property="og:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
     <meta property="og:image" content="https://discoverytechhub.com/og.png" />
+    <meta property="og:locale" content="en_NG" />
+    <meta property="og:site_name" content="DiscoveryTech Hub" />
 
     <!-- Schema Markup -->
     <script type="application/ld+json">
@@ -119,6 +117,22 @@
           "https://www.facebook.com/discoverytechhub"
         ]
       }
+    </script>
+
+    <!-- Google Analytics (deferred for performance) -->
+    <script>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-NCE7K80751';
+        s.async = true;
+        document.head.appendChild(s);
+        s.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', 'G-NCE7K80751');
+        };
+      });
     </script>
 
     <!-- Fonts -->
