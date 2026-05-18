@@ -6,15 +6,15 @@ import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { Link } from "react-router-dom";
 import {
   Zap, Wind, Monitor, Volume2, Bath, WifiOff,
-  Users, ArrowRight, ChevronRight, CheckCircle2,
-  Calendar, Clock, Building2, MapPin,
+  ArrowRight, ChevronRight, CheckCircle2,
+  Calendar, Clock, Building2,
 } from "lucide-react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
-// ─── Reusable scroll-reveal wrapper ──────────────────────────────────────────
+// ─── Scroll-reveal wrapper ────────────────────────────────────────────────────
 function Reveal({
   children,
   delay = 0,
@@ -30,9 +30,9 @@ function Reveal({
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   const variants = {
-    up:    { hidden: { opacity: 0, y: 40 },  visible: { opacity: 1, y: 0 } },
-    left:  { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } },
-    right: { hidden: { opacity: 0, x: 40 },  visible: { opacity: 1, x: 0 } },
+    up:    { hidden: { opacity: 0, y: 36 },  visible: { opacity: 1, y: 0 } },
+    left:  { hidden: { opacity: 0, x: -36 }, visible: { opacity: 1, x: 0 } },
+    right: { hidden: { opacity: 0, x: 36 },  visible: { opacity: 1, x: 0 } },
     none:  { hidden: { opacity: 0 },          visible: { opacity: 1 } },
   }[direction];
 
@@ -42,7 +42,7 @@ function Reveal({
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       variants={variants}
-      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -88,13 +88,13 @@ const EMPTY: FormData = {
   attendees: "", requirements: "", heardFrom: "",
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function HubPage() {
   const [form, setForm]           = useState<FormData>(EMPTY);
   const [errors, setErrors]       = useState<Partial<FormData>>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading]     = useState(false);
-  const [mailError, setMailError] = useState(false);
+  const [mailError, setMailError] = useState(false); // soft flag if PHP mailer fails
 
   const validate = (): Partial<FormData> => {
     const e: Partial<FormData> = {};
@@ -116,6 +116,7 @@ export default function HubPage() {
       setErrors(p => ({ ...p, [name]: undefined }));
   };
 
+  // ── Updated: async so we can await the PHP fetch before opening WhatsApp ──
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
@@ -124,8 +125,7 @@ export default function HubPage() {
     setLoading(true);
     setMailError(false);
 
-    // ── WhatsApp message (pre-filled, opens in new tab) ──────────────────────
-    const whatsappMsg =
+    const msg =
 `*New Hub Booking DiscoveryTech Hub*
 ──────────────────────────────
 👤 *Name:* ${form.fullName}
@@ -140,29 +140,26 @@ export default function HubPage() {
 📝 *Special Requirements:* ${form.requirements || "None"}
 📣 *How they found us:* ${form.heardFrom || "N/A"}`;
 
-    // ── POST to PHP mailer (background, silent) ───────────────────────────────
-    // Place send-booking.php at the root of your server or adjust the path below.
+    // ── POST to PHP mailer silently in the background ─────────────────────────
+    // Place send-booking.php at your server root (or update the path to match).
     try {
-      const res = await fetch("/send-booking.php", {
-        method: "POST",
+      const res  = await fetch("/send-booking.php", {
+        method:  "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body:    JSON.stringify(form),
       });
       const json = await res.json();
       if (!json.success) setMailError(true);
     } catch {
-      // Network / server error flag it but don't block the user
+      // Network / server error flag it softly, don't block the user
       setMailError(true);
     }
 
     setLoading(false);
     setSubmitted(true);
 
-    // Open WhatsApp with pre-filled message
-    window.open(
-      `https://wa.me/2349047465802?text=${encodeURIComponent(whatsappMsg)}`,
-      "_blank"
-    );
+    // Open WhatsApp with pre-filled message (unchanged behaviour)
+    window.open(`https://wa.me/2349047465802?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
   const inputCls = (field: keyof FormData) =>
@@ -186,46 +183,57 @@ export default function HubPage() {
 
       <div className="flex flex-col min-h-screen pt-16">
 
-        {/* ══ HERO SLIDER ══════════════════════════════════════════════════════ */}
-        <section className="relative h-[88vh] min-h-[560px] overflow-hidden">
-          <Swiper
-            modules={[Autoplay, Pagination, Navigation, EffectFade]}
-            effect="fade"
-            autoplay={{ delay: 4500, disableOnInteraction: false }}
-            pagination={{ clickable: true }}
-            navigation
-            loop
-            className="h-full w-full"
-          >
-            {heroSlides.map((slide, i) => (
-              <SwiperSlide key={i} className="relative h-full">
-                <img
-                  src={slide.img}
-                  alt={slide.caption}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0A1F44]/80 via-[#0A1F44]/55 to-[#0A1F44]/85" />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        {/* ══ HERO ═══════════════════════════════════════════════════════════
+            Same structure as Home hero: slider behind, overlay, centred text
+        ════════════════════════════════════════════════════════════════════ */}
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh]">
 
-          {/* Hero text floats above Swiper */}
-          <div className="absolute inset-0 z-10 flex items-center justify-center px-6 pointer-events-none">
-            <div className="text-center max-w-4xl pointer-events-auto">
-              <motion.span
-                initial={{ opacity: 0, y: -16 }}
+          {/* Swiper fills the full section */}
+          <div className="absolute inset-0 z-0">
+            <Swiper
+              modules={[Autoplay, Pagination, EffectFade]}
+              effect="fade"
+              autoplay={{ delay: 5000, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              loop
+              className="h-full w-full"
+            >
+              {heroSlides.map((slide, i) => (
+                <SwiperSlide key={i} className="h-full">
+                  <img
+                    src={slide.img}
+                    alt={slide.caption}
+                    className="w-full h-full object-cover"
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Same overlay stack as Home hero */}
+          <div className="absolute inset-0 z-[1] bg-blue-900/70 dark:bg-gray-950/80 mix-blend-multiply" />
+          <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-blue-600 rounded-full blur-[120px] opacity-40 z-[1]" />
+          <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-indigo-600 rounded-full blur-[120px] opacity-30 z-[1]" />
+
+          {/* Content */}
+          <div className="container mx-auto px-6 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+
+              <motion.div
+                initial={{ opacity: 0, y: -14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="inline-block bg-blue-600/90 text-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6"
+                transition={{ duration: 0.5, delay: 0.15 }}
               >
-                Now Available for Booking
-              </motion.span>
+                <span className="inline-block bg-blue-600/90 backdrop-blur-sm text-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
+                  Now Available for Booking
+                </span>
+              </motion.div>
 
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl md:text-7xl font-bold font-jakarta text-white leading-tight mb-5"
+                transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="text-5xl md:text-7xl font-bold font-jakarta text-white leading-tight mb-6"
               >
                 The{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
@@ -237,8 +245,8 @@ export default function HubPage() {
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto leading-relaxed"
+                transition={{ duration: 0.65, delay: 0.48 }}
+                className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed"
               >
                 A professional multipurpose space in Abuja built for focused work,
                 impactful trainings, and productive meetings.
@@ -247,67 +255,32 @@ export default function HubPage() {
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.65 }}
-                className="flex flex-wrap justify-center gap-3 mb-10"
-              >
-                {[
-                  { icon: Users,    text: "22 Persons Max"  },
-                  { icon: MapPin,   text: "Abuja, Nigeria"  },
-                  { icon: Calendar, text: "₦80,000 / Day"   },
-                ].map(({ icon: Icon, text }) => (
-                  <span
-                    key={text}
-                    className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm px-4 py-2 rounded-full"
-                  >
-                    <Icon className="w-4 h-4 text-blue-300" />
-                    {text}
-                  </span>
-                ))}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.45, delay: 0.8 }}
+                transition={{ duration: 0.5, delay: 0.62 }}
                 className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
                 <a
                   href="#booking-form"
-                  className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-full
-                             transition-all shadow-lg hover:shadow-blue-600/30 hover:-translate-y-1
-                             flex items-center gap-2"
+                  className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-full font-medium
+                             hover:bg-blue-500 transition-all shadow-lg hover:shadow-xl hover:shadow-blue-600/20
+                             hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500"
                 >
                   Book This Space <ArrowRight className="w-4 h-4" />
                 </a>
                 <a
                   href="#amenities"
-                  className="px-8 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 border border-white/20
-                             text-white font-medium rounded-full transition-all hover:-translate-y-1"
+                  className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white backdrop-blur-md rounded-full
+                             font-medium shadow-sm hover:bg-white/20 border border-white/20
+                             transition-all hover:-translate-y-1 text-center"
                 >
                   See What's Included
                 </a>
               </motion.div>
+
             </div>
           </div>
-
-          {/* Scroll cue */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-              className="w-6 h-10 border-2 border-white/40 rounded-full flex items-start justify-center pt-2"
-            >
-              <div className="w-1 h-2 bg-white/60 rounded-full" />
-            </motion.div>
-          </motion.div>
         </section>
 
-        {/* ══ QUICK STATS BAR ══════════════════════════════════════════════════ */}
+        {/* ══ STATS BAR ════════════════════════════════════════════════════════ */}
         <section className="bg-[#0A1F44] dark:bg-gray-900 py-5 px-4">
           <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 text-white text-center">
             {[
@@ -319,7 +292,7 @@ export default function HubPage() {
               <Reveal key={s.label} delay={i * 0.08} direction="none">
                 <div className="px-4 py-2">
                   <p className="text-2xl font-bold font-jakarta text-white">{s.value}</p>
-                  <p className="text-xs text-white/70 uppercase tracking-wider mt-0.5">{s.label}</p>
+                  <p className="text-xs text-white/60 uppercase tracking-wider mt-0.5">{s.label}</p>
                 </div>
               </Reveal>
             ))}
@@ -343,13 +316,14 @@ export default function HubPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {amenities.map(({ icon: Icon, label, sub, ok }, i) => (
-                <Reveal key={label} delay={i * 0.08}>
+                <Reveal key={label} delay={i * 0.07}>
                   <motion.div
-                    whileHover={ok ? { y: -6, scale: 1.02 } : {}}
+                    whileHover={ok ? { y: -5 } : {}}
+                    transition={{ duration: 0.25 }}
                     className={`bg-white dark:bg-gray-800 rounded-2xl p-7 border transition-all duration-300
                       ${ok
                         ? "border-slate-100 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-blue-200 dark:hover:border-blue-600"
-                        : "border-dashed border-slate-200 dark:border-gray-700 opacity-55"}`}
+                        : "border-dashed border-slate-200 dark:border-gray-700 opacity-50"}`}
                   >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4
                       ${ok
@@ -374,8 +348,8 @@ export default function HubPage() {
           </div>
         </section>
 
-        {/* ══ PHOTO STRIP (thumbnail slider) ══════════════════════════════════ */}
-        <section className="py-16 bg-white dark:bg-gray-950 px-4 overflow-hidden">
+        {/* ══ PHOTO STRIP ══════════════════════════════════════════════════════ */}
+        <section className="py-20 bg-white dark:bg-gray-950 px-4 overflow-hidden">
           <div className="max-w-5xl mx-auto">
             <Reveal className="text-center mb-10">
               <h2 className="text-3xl font-bold font-jakarta text-primary dark:text-white">
@@ -394,9 +368,9 @@ export default function HubPage() {
                 navigation
                 loop
                 breakpoints={{
-                  0:   { slidesPerView: 1,   spaceBetween: 16 },
-                  640: { slidesPerView: 2,   spaceBetween: 20 },
-                  1024:{ slidesPerView: 2.4, spaceBetween: 24 },
+                  0:    { slidesPerView: 1,   spaceBetween: 16 },
+                  640:  { slidesPerView: 2,   spaceBetween: 20 },
+                  1024: { slidesPerView: 2.4, spaceBetween: 24 },
                 }}
                 className="pb-12"
               >
@@ -420,7 +394,7 @@ export default function HubPage() {
           </div>
         </section>
 
-        {/* ══ USE CASES SLIDER ═════════════════════════════════════════════════ */}
+        {/* ══ USE CASES ════════════════════════════════════════════════════════ */}
         <section className="py-24 bg-slate-50 dark:bg-gray-900 px-4 overflow-hidden">
           <div className="max-w-5xl mx-auto">
             <Reveal className="text-center mb-14">
@@ -451,7 +425,8 @@ export default function HubPage() {
                 {useCases.map((u) => (
                   <SwiperSlide key={u.title}>
                     <motion.div
-                      whileHover={{ y: -6 }}
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.25 }}
                       className="bg-white dark:bg-gray-800 border border-slate-100 dark:border-gray-700
                                  hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-xl
                                  rounded-2xl p-8 h-full transition-all duration-300 group cursor-default"
@@ -558,10 +533,9 @@ export default function HubPage() {
                     Booking Request Sent!
                   </h3>
                   <p className="text-green-700 dark:text-green-400 text-sm max-w-sm mx-auto leading-relaxed">
-                    Your request has been forwarded to our WhatsApp and emailed to our team.
-                    We'll confirm your booking within 24 hours.
+                    Your request has been forwarded to our WhatsApp. We'll confirm your booking within 24 hours.
                   </p>
-                  {/* Soft warning if PHP mailer failed WhatsApp still went through */}
+                  {/* Soft warning if PHP mailer failed  WhatsApp still went through */}
                   {mailError && (
                     <p className="mt-4 text-xs text-amber-600 dark:text-amber-400">
                       Note: the email notification may not have delivered, but your WhatsApp message was sent successfully.
@@ -737,10 +711,8 @@ export default function HubPage() {
 
                   {/* Note */}
                   <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl px-5 py-4 text-sm text-blue-800 dark:text-blue-300 leading-relaxed">
-                    <strong>Note:</strong> Submitting this form will open WhatsApp with your booking
-                    details pre-filled and send a copy to our team at{" "}
-                    <span className="font-medium">info@discoverytechhub.com</span>. We'll confirm
-                    availability and pricing within 24 hours.
+                    <strong>Note:</strong> Submitting this form will open WhatsApp with your booking details pre-filled
+                    and send a copy to our team at info@discoverytechhub.com. We'll confirm availability and pricing within 24 hours.
                   </div>
 
                   <motion.button
@@ -771,32 +743,37 @@ export default function HubPage() {
         </section>
 
         {/* ══ BOTTOM CTA ════════════════════════════════════════════════════════ */}
-        <section className="py-20 bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-950 text-center px-4">
-          <Reveal>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-2">Still have questions?</p>
-            <h3 className="text-3xl font-bold font-jakarta text-primary dark:text-white mb-6">
-              Let's talk before you book.
-            </h3>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="https://wa.me/2349047465802?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20the%20DiscoveryTech%20Hub%20space."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-primary dark:bg-blue-700 text-white
-                           rounded-full font-bold hover:bg-blue-900 transition-all shadow-lg hover:-translate-y-1"
-              >
-                Chat on WhatsApp <ArrowRight className="w-4 h-4" />
-              </a>
-              <Link
-                to="/quote"
-                className="inline-flex items-center gap-2 px-8 py-4 border border-slate-200 dark:border-gray-700
-                           text-primary dark:text-white rounded-full font-medium
-                           hover:bg-slate-50 dark:hover:bg-gray-800 transition-all"
-              >
-                Get a General Quote
-              </Link>
-            </div>
-          </Reveal>
+        <section className="py-32 relative overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
+          <div className="container mx-auto px-6 text-center">
+            <Reveal>
+              <h2 className="text-4xl md:text-5xl font-bold font-jakarta text-primary dark:text-white mb-8 max-w-3xl mx-auto leading-tight">
+                Have questions before you{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
+                  book?
+                </span>
+              </h2>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a
+                  href="https://wa.me/2349047465802?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20the%20DiscoveryTech%20Hub%20space."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-10 py-5 bg-primary dark:bg-blue-700 text-white
+                             rounded-full font-bold text-lg hover:bg-blue-900 dark:hover:bg-blue-600
+                             transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                >
+                  Chat on WhatsApp <ChevronRight className="w-5 h-5" />
+                </a>
+                <Link
+                  to="/quote"
+                  className="inline-flex items-center gap-2 px-10 py-5 border border-slate-200 dark:border-gray-700
+                             text-primary dark:text-white rounded-full font-medium text-lg
+                             hover:bg-slate-50 dark:hover:bg-gray-800 transition-all hover:-translate-y-1"
+                >
+                  Get a General Quote
+                </Link>
+              </div>
+            </Reveal>
+          </div>
         </section>
 
       </div>
