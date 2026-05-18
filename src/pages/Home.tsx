@@ -212,7 +212,7 @@ export default function Home() {
               {/* Left — image */}
               <div className="relative h-64 md:h-auto overflow-hidden">
                 <img
-                  src="/hub1.png"
+                  src="/hub1.jpg"
                   alt="DiscoveryTech Hub multipurpose space Abuja"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
