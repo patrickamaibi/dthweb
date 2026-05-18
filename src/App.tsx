@@ -10,6 +10,7 @@ import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Services from '@/pages/Services';
 import Quote from '@/pages/Quote';
+import HubPage from '@/pages/HubPage';
 import { X } from 'lucide-react';
 
 function App() {
@@ -70,7 +71,6 @@ function App() {
   return (
     <HelmetProvider>
       <Helmet>
-        {/* Global fallback meta — pages override these via their own Helmet */}
         <meta name="robots" content="index, follow" />
         <meta name="author" content="DiscoveryTech Hub" />
         <meta property="og:site_name" content="DiscoveryTech Hub" />
@@ -89,10 +89,11 @@ function App() {
 
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/quote" element={<Quote />} />
+              <Route path="/"         element={<Home />}    />
+              <Route path="/about"    element={<About />}   />
+              <Route path="/services" element={<Services />}/>
+              <Route path="/quote"    element={<Quote />}   />
+              <Route path="/hub"      element={<HubPage />} />
             </Routes>
           </main>
 

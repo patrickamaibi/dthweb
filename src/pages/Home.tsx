@@ -1,25 +1,33 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, MonitorSmartphone, TrendingUp, Presentation, Users, Briefcase, ChevronRight } from "lucide-react";
+import { ArrowRight, CheckCircle2, MonitorSmartphone, TrendingUp, Presentation, Users, Briefcase, ChevronRight, Zap, Wind, Monitor, Volume2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Helmet } from "react-helmet-async";
 
 export default function Home() {
   const whyChooseUs = [
     { title: "One-stop digital solutions", icon: <MonitorSmartphone className="w-6 h-6" /> },
-    { title: "Experienced professionals", icon: <Users className="w-6 h-6" /> },
-    { title: "Client-focused approach", icon: <Briefcase className="w-6 h-6" /> },
-    { title: "Affordable & transparent", icon: <TrendingUp className="w-6 h-6" /> },
-    { title: "Timely project delivery", icon: <CheckCircle2 className="w-6 h-6" /> },
+    { title: "Experienced professionals",  icon: <Users className="w-6 h-6" /> },
+    { title: "Client-focused approach",    icon: <Briefcase className="w-6 h-6" /> },
+    { title: "Affordable & transparent",   icon: <TrendingUp className="w-6 h-6" /> },
+    { title: "Timely project delivery",    icon: <CheckCircle2 className="w-6 h-6" /> },
     { title: "Ongoing support & training", icon: <Presentation className="w-6 h-6" /> },
   ];
 
   const process = [
-    { title: "Discover", desc: "Understanding your goals and challenges" },
-    { title: "Strategize", desc: "Crafting a tailored solution" },
+    { title: "Discover",         desc: "Understanding your goals and challenges" },
+    { title: "Strategize",       desc: "Crafting a tailored solution" },
     { title: "Design & Develop", desc: "Building with precision" },
-    { title: "Review & Refine", desc: "Perfecting the solution" },
+    { title: "Review & Refine",  desc: "Perfecting the solution" },
     { title: "Deliver & Deploy", desc: "Launching your project" },
-    { title: "Support & Grow", desc: "Ensuring long-term success" },
+    { title: "Support & Grow",   desc: "Ensuring long-term success" },
+  ];
+
+  const hubHighlights = [
+    { icon: <Users className="w-5 h-5" />,   text: "Seats 22 persons"     },
+    { icon: <Zap className="w-5 h-5" />,     text: "Constant power supply" },
+    { icon: <Wind className="w-5 h-5" />,    text: "Air conditioned"       },
+    { icon: <Monitor className="w-5 h-5" />, text: "Projector & PA system" },
+    { icon: <Volume2 className="w-5 h-5" />, text: "PA system included"    },
   ];
 
   return (
@@ -28,23 +36,23 @@ export default function Home() {
         <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
         <meta name="description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
         <link rel="canonical" href="https://discoverytechhub.com/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://discoverytechhub.com/" />
-        <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
+        <meta property="og:type"        content="website" />
+        <meta property="og:url"         content="https://discoverytechhub.com/" />
+        <meta property="og:title"       content="DiscoveryTech Hub | Your Digital Transformation Partner" />
         <meta property="og:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
-        <meta property="og:image" content="https://discoverytechhub.com/og.png" />
-        <meta property="og:image:width" content="1200" />
+        <meta property="og:image"       content="https://discoverytechhub.com/og.png" />
+        <meta property="og:image:width"  content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="DiscoveryTech Hub - Your Digital Transformation Partner" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://discoverytechhub.com/" />
-        <meta name="twitter:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
+        <meta property="og:image:alt"    content="DiscoveryTech Hub - Your Digital Transformation Partner" />
+        <meta name="twitter:card"        content="summary_large_image" />
+        <meta name="twitter:url"         content="https://discoverytechhub.com/" />
+        <meta name="twitter:title"       content="DiscoveryTech Hub | Your Digital Transformation Partner" />
         <meta name="twitter:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
-        <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
-        <meta name="twitter:image:alt" content="DiscoveryTech Hub - Your Digital Transformation Partner" />
+        <meta name="twitter:image"       content="https://discoverytechhub.com/og.png" />
+        <meta name="twitter:image:alt"   content="DiscoveryTech Hub - Your Digital Transformation Partner" />
       </Helmet>
 
-      {/* Hero Section */}
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh] bg-primary dark:bg-gray-950">
         <div className="absolute inset-0 z-0 opacity-30">
           <img src="/hero.jpg" alt="DiscoveryTech Hub Hero Background" className="w-full h-full object-cover" />
@@ -90,7 +98,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Preview */}
+      {/* ── About Preview ─────────────────────────────────────────────────── */}
       <section className="py-24 bg-slate-50 dark:bg-gray-900 relative">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-16 items-center">
@@ -134,7 +142,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* ── Why Choose Us ─────────────────────────────────────────────────── */}
       <section className="py-24 relative overflow-hidden bg-white dark:bg-gray-950">
         <div className="container mx-auto px-6">
           <AnimatedSection className="text-center max-w-2xl mx-auto mb-16">
@@ -156,7 +164,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Process Section */}
+      {/* ── Process ───────────────────────────────────────────────────────── */}
       <section className="py-24 bg-slate-50 dark:bg-gray-900 relative">
         <div className="container mx-auto px-6 max-w-6xl">
           <AnimatedSection className="text-center max-w-2xl mx-auto mb-16">
@@ -193,7 +201,81 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Banner */}
+      {/* ══ HUB TEASER ════════════════════════════════════════════════════════
+          Injected between Process and the final CTA banner
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 bg-white dark:bg-gray-950 px-4">
+        <div className="max-w-5xl mx-auto">
+          <AnimatedSection>
+            <div className="rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 shadow-2xl">
+
+              {/* Left — image */}
+              <div className="relative h-64 md:h-auto overflow-hidden">
+                <img
+                  src="/hub1.png"
+                  alt="DiscoveryTech Hub multipurpose space Abuja"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0A1F44]/60 via-transparent to-transparent md:bg-gradient-to-t md:from-[#0A1F44]/50 md:via-transparent" />
+                <span className="absolute top-5 left-5 bg-blue-600 text-white text-xs font-semibold tracking-widest uppercase px-3 py-1.5 rounded-full">
+                  Now Bookable
+                </span>
+              </div>
+
+              {/* Right — copy */}
+              <div className="bg-[#0A1F44] dark:bg-gray-900 p-10 md:p-12 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-bold font-jakarta text-white leading-tight mb-4">
+                    Need a professional space in Abuja?
+                  </h2>
+                  <p className="text-blue-200 text-base leading-relaxed mb-8">
+                    Our multipurpose hub is available for co-working, trainings, executive meetings, and events. Fully equipped. Ready when you are.
+                  </p>
+
+                  {/* Highlights */}
+                  <ul className="space-y-3 mb-8">
+                    {hubHighlights.slice(0, 4).map((h) => (
+                      <li key={h.text} className="flex items-center gap-3 text-blue-100 text-sm">
+                        <span className="text-blue-400 shrink-0">{h.icon}</span>
+                        {h.text}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="text-blue-300 text-sm mb-8">
+                    From{" "}
+                    <span className="text-white font-bold text-xl">₦80,000</span>
+                    <span className="text-blue-300"> / day · Negotiable</span>
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link
+                    to="/hub"
+                    className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500
+                               text-white font-semibold px-6 py-3 rounded-xl transition-all hover:-translate-y-0.5 shadow-lg text-sm"
+                  >
+                    View Space & Book <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <a
+                    href="https://wa.me/2349047465802?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20booking%20the%20DiscoveryTech%20Hub%20space."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 border border-white/25 hover:bg-white/10
+                               text-white font-medium px-6 py-3 rounded-xl transition-all text-sm"
+                  >
+                    WhatsApp Us
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+      {/* ══ END HUB TEASER ══════════════════════════════════════════════════ */}
+
+      {/* ── CTA Banner ────────────────────────────────────────────────────── */}
       <section className="py-32 relative overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
         <div className="container mx-auto px-6 text-center">
           <AnimatedSection>

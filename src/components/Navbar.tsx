@@ -109,9 +109,10 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
   }, [isOpen]);
 
   const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About Us" },
-    { to: "/services", label: "Services" },
+    { to: "/",        label: "Home"        },
+    { to: "/about",   label: "About Us"    },
+    { to: "/services",label: "Services"    },
+    { to: "/hub",     label: "Book a Space"},  // ← NEW
   ];
 
   return (
@@ -195,6 +196,12 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                     }`}
                   >
                     {link.label}
+                    {/* Highlight badge for Book a Space */}
+                    {link.to === "/hub" && (
+                      <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
+                        New
+                      </span>
+                    )}
                   </Link>
                 </motion.div>
               ))}
@@ -202,7 +209,7 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.25 }}
+                transition={{ delay: 0.28 }}
                 className="pt-6"
               >
                 <Link
@@ -217,7 +224,7 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.35 }}
                 className="pt-4"
               >
                 <button
