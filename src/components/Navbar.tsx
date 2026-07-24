@@ -112,7 +112,8 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
     { to: "/",        label: "Home"        },
     { to: "/about",   label: "About Us"    },
     { to: "/services",label: "Services"    },
-    { to: "/hub",     label: "Book a Space"},  // ← NEW
+    { to: "/hub",     label: "Book a Space"},
+    { to: "https://blog.discoverytechhub.com", label: "Blog", external: true }, // ← NEW
   ];
 
   return (
@@ -132,19 +133,31 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-8 items-center font-medium text-sm">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
-                location.pathname === link.to
-                  ? "text-blue-600 dark:text-blue-400 font-semibold"
-                  : "text-slate-700 dark:text-slate-300"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.to}
+                href={link.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-blue-600 dark:hover:text-blue-400 text-slate-700 dark:text-slate-300"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
+                  location.pathname === link.to
+                    ? "text-blue-600 dark:text-blue-400 font-semibold"
+                    : "text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
           <Link
             to="/quote"
             className="px-5 py-2 bg-primary dark:bg-blue-700 text-white rounded-full text-sm hover:bg-blue-900 dark:hover:bg-blue-600 transition-colors shadow-sm"
@@ -186,23 +199,35 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.07 }}
                 >
-                  <Link
-                    to={link.to}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center py-4 text-base font-medium border-b border-slate-100 dark:border-gray-800 transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
-                      location.pathname === link.to
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-slate-700 dark:text-slate-300"
-                    }`}
-                  >
-                    {link.label}
-                    {/* Highlight badge for Book a Space */}
-                    {link.to === "/hub" && (
-                      <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
-                        New
-                      </span>
-                    )}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center py-4 text-base font-medium border-b border-slate-100 dark:border-gray-800 transition-colors hover:text-blue-600 dark:hover:text-blue-400 text-slate-700 dark:text-slate-300"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.to}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center py-4 text-base font-medium border-b border-slate-100 dark:border-gray-800 transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
+                        location.pathname === link.to
+                          ? "text-blue-600 dark:text-blue-400"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
+                      {link.label}
+                      {/* Highlight badge for Book a Space */}
+                      {link.to === "/hub" && (
+                        <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
+                          New
+                        </span>
+                      )}
+                    </Link>
+                  )}
                 </motion.div>
               ))}
 

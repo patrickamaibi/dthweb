@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, useInView } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 import {
   Zap, Wind, Monitor, Volume2, Bath, WifiOff,
@@ -12,7 +12,6 @@ import {
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "swiper/css/effect-fade";
 
 // ─── Scroll-reveal wrapper ────────────────────────────────────────────────────
 function Reveal({
@@ -51,12 +50,6 @@ function Reveal({
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-const heroSlides = [
-  { img: "/hub1.jpg", caption: "A professional space built for focused work" },
-  { img: "/hub2.jpg", caption: "Ideal for trainings, workshops & team sessions" },
-  { img: "/hub3.jpg", caption: "Executive meetings & presentations fully equipped" },
-];
-
 const amenities = [
   { icon: Zap,     label: "Constant Power",    sub: "Uninterrupted electricity zero downtime",  ok: true  },
   { icon: Wind,    label: "Air Conditioning",   sub: "Climate-controlled comfort all day",          ok: true  },
@@ -181,102 +174,30 @@ export default function HubPage() {
         <meta property="og:image"       content="https://discoverytechhub.com/hub1.jpg" />
       </Helmet>
 
-      <div className="flex flex-col min-h-screen pt-16">
+      <div className="flex flex-col min-h-screen pt-20">
 
         {/* ══ HERO ═══════════════════════════════════════════════════════════
-            Same structure as Home hero: slider behind, overlay, centred text
+            Matches the Services.tsx page header exactly: solid brand
+            background, one low-opacity image, single heading, single line
+            of copy, single CTA. No badges, no gradient text, no orbs.
         ════════════════════════════════════════════════════════════════════ */}
-        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh]">
-
-          {/* Swiper fills the full section */}
-          <div className="absolute inset-0 z-0">
-            <Swiper
-              modules={[Autoplay, Pagination, EffectFade]}
-              effect="fade"
-              autoplay={{ delay: 5000, disableOnInteraction: false }}
-              pagination={{ clickable: true }}
-              loop
-              className="h-full w-full"
-            >
-              {heroSlides.map((slide, i) => (
-                <SwiperSlide key={i} className="h-full">
-                  <img
-                    src={slide.img}
-                    alt={slide.caption}
-                    className="w-full h-full object-cover"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-
-          {/* Same overlay stack as Home hero */}
-          <div className="absolute inset-0 z-[1] bg-blue-900/70 dark:bg-gray-950/80 mix-blend-multiply" />
-          <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[600px] h-[600px] bg-blue-600 rounded-full blur-[120px] opacity-40 z-[1]" />
-          <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[500px] h-[500px] bg-indigo-600 rounded-full blur-[120px] opacity-30 z-[1]" />
-
-          {/* Content */}
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-
-              <motion.div
-                initial={{ opacity: 0, y: -14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.15 }}
+        <section className="bg-primary dark:bg-gray-900 text-white py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/hub1.jpg')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+          <div className="container mx-auto px-6 relative z-10 text-center">
+            <Reveal>
+              <h1 className="text-5xl md:text-6xl font-bold font-jakarta mb-6">
+                The DiscoveryTech Hub
+              </h1>
+              <p className="text-xl text-blue-200 max-w-2xl mx-auto leading-relaxed mb-10">
+                A professional multipurpose space in Abuja for co-working, training, and meetings.
+              </p>
+              <a
+                href="#booking-form"
+                className="inline-flex items-center gap-2 px-10 py-4 bg-white dark:bg-blue-700 text-primary dark:text-white rounded-full font-bold text-lg hover:bg-slate-100 dark:hover:bg-blue-600 transition-all shadow-xl hover:-translate-y-1"
               >
-                <span className="inline-block bg-blue-600/90 backdrop-blur-sm text-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
-                  Now Available for Booking
-                </span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl md:text-7xl font-bold font-jakarta text-white leading-tight mb-6"
-              >
-                The{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                  DiscoveryTech
-                </span>{" "}
-                Hub
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, delay: 0.48 }}
-                className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed"
-              >
-                A professional multipurpose space in Abuja built for focused work,
-                impactful trainings, and productive meetings.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.62 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              >
-                <a
-                  href="#booking-form"
-                  className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-full font-medium
-                             hover:bg-blue-500 transition-all shadow-lg hover:shadow-xl hover:shadow-blue-600/20
-                             hover:-translate-y-1 flex items-center justify-center gap-2 border border-blue-500"
-                >
-                  Book This Space <ArrowRight className="w-4 h-4" />
-                </a>
-                <a
-                  href="#amenities"
-                  className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white backdrop-blur-md rounded-full
-                             font-medium shadow-sm hover:bg-white/20 border border-white/20
-                             transition-all hover:-translate-y-1 text-center"
-                >
-                  See What's Included
-                </a>
-              </motion.div>
-
-            </div>
+                Book This Space
+              </a>
+            </Reveal>
           </div>
         </section>
 
