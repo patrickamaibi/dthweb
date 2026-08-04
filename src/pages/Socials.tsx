@@ -94,7 +94,7 @@ export default function Socials() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/ogdth1.webp)",
+          backgroundImage: "url(/ogdth.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "blur(10px) brightness(0.55) saturate(1.1)",
