@@ -75,7 +75,7 @@ export default function About() {
                 Driving digital transformation for the modern age
               </h3>
               <div className="space-y-4 text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
-                <p>DiscoveryTech Hub is a premier ICT solutions company operating at the intersection of technology, creativity, and education, dedicated to driving digital transformation for businesses, organizations, and individuals.</p>
+                <p>DiscoveryTech Hub, a vertical of DiscoveryHub, is a premier ICT solutions company operating at the intersection of technology, creativity, and education, dedicated to driving digital transformation for businesses, organizations, and individuals.</p>
                 <p>Our team of passionate professionals brings deep expertise across multiple digital disciplines, including software development, IT consulting, digital marketing, and tech education.</p>
               </div>
             </AnimatedSection>

@@ -2,6 +2,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import ContactForm from "@/components/ContactForm";
 import { Mail, MapPin, Globe, Clock, Phone } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { SITE } from "@/lib/site";
 
 export default function Quote() {
   return (
@@ -74,7 +75,7 @@ export default function Quote() {
                   <Globe className="w-6 h-6 text-blue-300 flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-bold mb-1">Website</h4>
-                    <p className="text-blue-100">www.discoverytechhub.com</p>
+                    <p className="text-blue-100">discoverytechhub.com</p>
                   </div>
                 </div>
 
@@ -82,7 +83,7 @@ export default function Quote() {
                   <MapPin className="w-6 h-6 text-blue-300 flex-shrink-0 mt-1" />
                   <div>
                     <h4 className="font-bold mb-1">Location</h4>
-                    <p className="text-blue-100">Abuja, Nigeria</p>
+                    <p className="text-blue-100">{SITE.address.street}, Abuja, Nigeria</p>
                   </div>
                 </div>
 

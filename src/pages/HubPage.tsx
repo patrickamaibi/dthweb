@@ -4,6 +4,8 @@ import { motion, useInView } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
+import FAQSection from "@/components/FAQSection";
+import { hubSchema, hubFaq } from "@/lib/site";
 import {
   Zap, Wind, Monitor, Volume2, Bath, WifiOff,
   ArrowRight, ChevronRight, CheckCircle2,
@@ -172,6 +174,14 @@ export default function HubPage() {
         <meta property="og:title"       content="Book the Hub – DiscoveryTech Hub | Multipurpose Space Abuja" />
         <meta property="og:description" content="Professional multipurpose hall in Abuja. Seats 22. AC, projector, PA, constant power. ₦80,000/day." />
         <meta property="og:image"       content="https://discoverytechhub.com/hub1.jpg" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image:alt" content="DiscoveryTech Hub multipurpose space in Abuja" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://discoverytechhub.com/hub" />
+        <meta name="twitter:title" content="Book the Hub - DiscoveryTech Hub | Multipurpose Space Abuja" />
+        <meta name="twitter:description" content="Professional multipurpose hall in Abuja. Seats 22. AC, projector, PA, constant power. N80,000/day." />
+        <meta name="twitter:image" content="https://discoverytechhub.com/hub1.jpg" />
+        <script type="application/ld+json">{JSON.stringify(hubSchema())}</script>
       </Helmet>
 
       <div className="flex flex-col min-h-screen pt-20">
@@ -664,6 +674,8 @@ export default function HubPage() {
         </section>
 
         {/* ══ BOTTOM CTA ════════════════════════════════════════════════════════ */}
+        <FAQSection title="Hub booking questions" eyebrow="Hub FAQ" items={hubFaq} />
+
         <section className="py-32 relative overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
           <div className="container mx-auto px-6 text-center">
             <Reveal>

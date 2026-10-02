@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SITE } from "@/lib/site";
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
 interface FooterProps {
@@ -80,6 +81,7 @@ export default function Footer({ theme, setThemeMode }: FooterProps) {
             <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
             <li><Link to="/services" className="hover:text-white transition-colors">Services</Link></li>
+            <li><Link to="/hub" className="hover:text-white transition-colors">The Hub</Link></li>
             <li><Link to="/quote" className="hover:text-white transition-colors">Get Quote</Link></li>
             <li>
               <a
@@ -109,7 +111,7 @@ export default function Footer({ theme, setThemeMode }: FooterProps) {
             </li>
             <li className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-              <span>Abuja, Nigeria and Remote</span>
+              <span>{SITE.address.street}, Abuja, Nigeria and Remote</span>
             </li>
           </ul>
 

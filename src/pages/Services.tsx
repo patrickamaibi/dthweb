@@ -2,6 +2,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import ServicesList from "@/components/ServicesList";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { servicesSchema } from "@/lib/site";
 
 export default function Services() {
   return (
@@ -24,6 +25,7 @@ export default function Services() {
         <meta name="twitter:description" content="Explore DiscoveryTech Hub's services — web design, graphic design, ICT training, branding, printing & consultancy for businesses in Nigeria and beyond." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="DiscoveryTech Hub Services - Web Design, ICT Training & More" />
+        <script type="application/ld+json">{JSON.stringify(servicesSchema())}</script>
       </Helmet>
 
       {/* Page Header */}
