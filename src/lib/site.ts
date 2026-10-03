@@ -137,7 +137,7 @@ export function faqSchema(items: FaqItem[]) {
 export const homeFaq: FaqItem[] = [
   {
     q: "What does DiscoveryTech Hub do?",
-    a: "DiscoveryTech Hub is an ICT solutions company in Abuja, Nigeria, and a vertical of DiscoveryHub. We offer web design and development, ICT training, graphic design, branding and identity, printing, proposal and report writing, and ICT consultancy for businesses, organizations, and individuals across Nigeria and beyond.",
+    a: "DiscoveryTech Hub is an ICT solutions company in Abuja, Nigeria, and the technology division of DiscoveryHub. We offer web design and development, ICT training, graphic design, branding and identity, printing, proposal and report writing, and ICT consultancy for businesses, organizations, and individuals across Nigeria and beyond.",
   },
   {
     q: "Where is DiscoveryTech Hub located?",

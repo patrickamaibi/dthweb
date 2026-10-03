@@ -12,6 +12,9 @@ import Services from '@/pages/Services';
 import Quote from '@/pages/Quote';
 import HubPage from '@/pages/HubPage';
 import Socials from '@/pages/Socials';
+import Testimonials from '@/pages/Testimonials';
+import Review from '@/pages/Review';
+import Admin from '@/pages/Admin';
 import { X } from 'lucide-react';
 
 function AppShell({
@@ -38,12 +41,15 @@ function AppShell({
 
         <main className="flex-grow">
           <Routes>
-            <Route path="/"         element={<Home />}    />
-            <Route path="/about"    element={<About />}   />
-            <Route path="/services" element={<Services />}/>
-            <Route path="/quote"    element={<Quote />}   />
-            <Route path="/hub"      element={<HubPage />} />
-            <Route path="/socials"  element={<Socials />} />
+            <Route path="/"                element={<Home />}         />
+            <Route path="/about"           element={<About />}        />
+            <Route path="/services"        element={<Services />}     />
+            <Route path="/quote"           element={<Quote />}        />
+            <Route path="/hub"             element={<HubPage />}      />
+            <Route path="/socials"         element={<Socials />}      />
+            <Route path="/testimonials"    element={<Testimonials />} />
+            <Route path="/review/:token"   element={<Review />}       />
+            <Route path="/admin"           element={<Admin />}        />
           </Routes>
         </main>
 

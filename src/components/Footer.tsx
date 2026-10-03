@@ -82,6 +82,7 @@ export default function Footer({ theme, setThemeMode }: FooterProps) {
             <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
             <li><Link to="/services" className="hover:text-white transition-colors">Services</Link></li>
             <li><Link to="/hub" className="hover:text-white transition-colors">The Hub</Link></li>
+            <li><Link to="/testimonials" className="hover:text-white transition-colors">Testimonials</Link></li>
             <li><Link to="/quote" className="hover:text-white transition-colors">Get Quote</Link></li>
             <li>
               <a

@@ -4,6 +4,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Helmet } from "react-helmet-async";
 import FAQSection from "@/components/FAQSection";
 import { homeFaq } from "@/lib/site";
+import TestimonialsStrip from "@/components/TestimonialsStrip";
 
 export default function Home() {
   const whyChooseUs = [
@@ -127,7 +128,7 @@ export default function Home() {
                 <h2 className="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2">About DiscoveryTech Hub</h2>
                 <h3 className="text-4xl font-bold font-jakarta text-primary dark:text-white mb-6">Web Design & ICT Solutions Built for Nigeria</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-lg">
-                  DiscoveryTech Hub, a vertical of DiscoveryHub, is an ICT solutions company based in Abuja, Nigeria. We deliver end-to-end digital services including web design and development, ICT training, graphic design, branding, printing, proposal writing, and ICT consultancy for businesses, organizations, and individuals across Nigeria and beyond.
+                  DiscoveryTech Hub, the technology division of DiscoveryHub, is an ICT solutions company based in Abuja, Nigeria. We deliver end-to-end digital services including web design and development, ICT training, graphic design, branding, printing, proposal writing, and ICT consultancy for businesses, organizations, and individuals across Nigeria and beyond.
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-lg">
                   From web development and branding to ICT training and consultancy, we provide everything you need under one roof, serving businesses across Nigeria and beyond.
@@ -278,6 +279,8 @@ export default function Home() {
       {/* ══ END HUB TEASER ══════════════════════════════════════════════════ */}
 
       {/* ── CTA Banner ────────────────────────────────────────────────────── */}
+      <TestimonialsStrip />
+
       <FAQSection title="Frequently asked questions" items={homeFaq} />
 
       <section className="py-32 relative overflow-hidden bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">

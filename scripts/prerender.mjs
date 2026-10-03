@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 
 const DIST = resolve('dist');
 const PORT = 4173;
-const ROUTES = ['/', '/about', '/services', '/quote', '/hub'];
+const ROUTES = ['/', '/about', '/services', '/quote', '/hub', '/testimonials'];
 
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
@@ -57,7 +57,14 @@ async function main() {
       () => (document.querySelector('main')?.children.length ?? 0) > 0,
       { timeout: 15000 }
     );
-    await new Promise((r) => setTimeout(r, 500));
+
+    // Reviews load from Supabase after the page mounts: wait until they are in the DOM
+    if (route === '/testimonials') {
+      await page.waitForSelector('[data-testimonials-ready]', { timeout: 15000 });
+    }
+
+    // Home gets a little longer so the testimonials strip can load
+    await new Promise((r) => setTimeout(r, route === '/' ? 1500 : 500));
 
     await page.evaluate(() => {
       document.documentElement.classList.remove('dark');

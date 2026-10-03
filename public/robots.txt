@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: GPTBot

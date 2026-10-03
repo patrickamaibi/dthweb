@@ -2,8 +2,12 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { ChevronRight, Target, Eye, Lightbulb, CheckCircle2, HeartHandshake, BookOpen, Search, Code, LayoutDashboard, Rocket, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import TeamSection from "@/components/TeamSection";
+import { peopleSchema } from "@/lib/team";
 
 export default function About() {
+  const schema = peopleSchema();
+
   const values = [
     { title: "Innovation", desc: "Pushing boundaries with creative solutions", icon: <Lightbulb className="w-8 h-8" /> },
     { title: "Excellence", desc: "Delivering top-quality results", icon: <CheckCircle2 className="w-8 h-8" /> },
@@ -26,12 +30,12 @@ export default function About() {
     <div className="flex flex-col min-h-screen pt-20">
       <Helmet>
         <title>About Us | DiscoveryTech Hub</title>
-        <meta name="description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
+        <meta name="description" content="Learn about DiscoveryTech Hub, a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <link rel="canonical" href="https://discoverytechhub.com/about" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://discoverytechhub.com/about" />
         <meta property="og:title" content="About Us | DiscoveryTech Hub" />
-        <meta property="og:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
+        <meta property="og:description" content="Learn about DiscoveryTech Hub, a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <meta property="og:image" content="https://discoverytechhub.com/og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -39,9 +43,10 @@ export default function About() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://discoverytechhub.com/about" />
         <meta name="twitter:title" content="About Us | DiscoveryTech Hub" />
-        <meta name="twitter:description" content="Learn about DiscoveryTech Hub — a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
+        <meta name="twitter:description" content="Learn about DiscoveryTech Hub, a premier ICT solutions company in Nigeria and beyond, driving digital transformation through web design, ICT training, branding & consultancy." />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="About DiscoveryTech Hub - ICT Solutions in Nigeria" />
+        {schema && <script type="application/ld+json">{JSON.stringify(schema)}</script>}
       </Helmet>
 
       {/* Page Header */}
@@ -75,8 +80,8 @@ export default function About() {
                 Driving digital transformation for the modern age
               </h3>
               <div className="space-y-4 text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
-                <p>DiscoveryTech Hub, a vertical of DiscoveryHub, is a premier ICT solutions company operating at the intersection of technology, creativity, and education, dedicated to driving digital transformation for businesses, organizations, and individuals.</p>
-                <p>Our team of passionate professionals brings deep expertise across multiple digital disciplines, including software development, IT consulting, digital marketing, and tech education.</p>
+                <p>DiscoveryTech Hub is the technology division of DiscoveryHub, an ICT solutions company working where technology, creativity, and education meet. We help businesses, organizations, and individuals modernize the way they work, learn, and grow.</p>
+                <p>Our team brings deep expertise in software development, IT consulting, digital marketing, and tech education, delivering practical solutions that turn ideas into measurable results.</p>
               </div>
             </AnimatedSection>
           </div>
@@ -199,6 +204,9 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* Team (placed last before the CTA so the page ends on the action) */}
+      <TeamSection />
 
       {/* CTA Footer Banner */}
       <section className="py-20 bg-blue-50 dark:bg-gray-900 border-t border-blue-100 dark:border-gray-700 text-center">
