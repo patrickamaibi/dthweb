@@ -12,14 +12,14 @@ export const founders: Person[] = [
   {
     name: "Patrick Amaibi",
     role: "Co-founder & Lead Engineer",
-    photo: "/team/dthpatrick.jpg",
+    photo: "/team/dthpatrick.jpeg",
     bio: "Patrick Amaibi is a technology builder working at the intersection of AI, blockchain, and digital infrastructure. At DiscoveryTech Hub, he designs and delivers websites, digital platforms, and emerging-tech solutions that help organizations operate smarter and reach more people. He brings a hands-on, results-focused approach to every project and is committed to empowering the next generation of African innovators through technology education.",
     linkedin: "https://ng.linkedin.com/in/patrickamaibi",
   },
   {
     name: "Gift Afambu",
     role: "Co-founder & Creative Director",
-    photo: "/team/dthgift.webp",
+    photo: "/team/dthgift.jpeg",
     bio: "Gift Afambu is a brand strategist and designer who helps businesses turn ideas into identities people remember. As co-founder of DiscoveryTech Hub, she shapes brand identity design, digital marketing strategy, and content production, building logos, visual frameworks, and market positioning that connect technology with the people it serves. She believes strong branding and smart execution belong together, and she helps clients define who they are and drive the actions that grow their business.",
     linkedin: "https://ng.linkedin.com/in/giftafambu",
   },
