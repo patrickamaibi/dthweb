@@ -4,24 +4,38 @@ Disallow: /review/
 Allow: /
 
 User-agent: GPTBot
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: OAI-SearchBot
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: ChatGPT-User
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: ClaudeBot
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: Claude-SearchBot
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: PerplexityBot
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 User-agent: Google-Extended
+Disallow: /admin
+Disallow: /review/
 Allow: /
 
 Sitemap: https://discoverytechhub.com/sitemap.xml

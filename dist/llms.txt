@@ -8,6 +8,7 @@
 - [The Hub (space rental)](https://discoverytechhub.com/hub): 22-seat multipurpose space, amenities, pricing and booking
 - [About](https://discoverytechhub.com/about): mission, vision, values and working process
 - [Get a quote](https://discoverytechhub.com/quote): contact details and quote request form
+- [Testimonials](https://discoverytechhub.com/testimonials): what clients say about working with DiscoveryTech Hub on websites, branding and ICT services
 
 ## Facts
 - Location: Plot 740 Aminu Kano Crescent, Wuse 2, FCT Abuja, Abuja, Nigeria

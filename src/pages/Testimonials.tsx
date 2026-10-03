@@ -4,39 +4,8 @@ import { Helmet } from "react-helmet-async";
 import { Quote } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import StarRating from "../components/StarRating";
-import TestimonialImage from "../components/TestimonialImage";
+import TestimonialCard from "../components/TestimonialCard";
 import { fetchLiveTestimonials, PublicTestimonial, SITE_URL } from "../lib/supabase";
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join("");
-}
-
-function monthYear(d: string | null) {
-  if (!d) return "";
-  return new Date(d).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
-}
-
-function Avatar({ t, size, light = false }: { t: PublicTestimonial; size: number; light?: boolean }) {
-  if (t.image_path) return <TestimonialImage path={t.image_path} name={t.client_name} size={size} />;
-  return (
-    <div
-      aria-hidden="true"
-      style={{ width: size, height: size }}
-      className={`flex shrink-0 items-center justify-center rounded-lg font-jakarta font-bold ${
-        light
-          ? "bg-white/15 text-white"
-          : "bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-      }`}
-    >
-      {initials(t.client_name)}
-    </div>
-  );
-}
 
 export default function Testimonials() {
   const [items, setItems] = useState<PublicTestimonial[] | null>(null);
@@ -50,9 +19,6 @@ export default function Testimonials() {
   const average = rated.length
     ? rated.reduce((sum, t) => sum + (t.rating ?? 0), 0) / rated.length
     : 0;
-  const featured =
-    list.find((t) => (t.rating ?? 0) >= 4 && (t.message?.length ?? 0) >= 80) ?? list[0];
-  const rest = list.filter((t) => t !== featured);
 
   return (
     // data-testimonials-ready lets the prerender script know the reviews have loaded
@@ -132,52 +98,10 @@ export default function Testimonials() {
             </div>
           )}
 
-          {featured && (
-            <figure className="relative overflow-hidden rounded-3xl bg-[#0A1F44] p-8 shadow-2xl md:p-14 dark:bg-gray-800">
-              <Quote
-                className="absolute right-6 top-6 h-24 w-24 text-white/5 md:h-44 md:w-44"
-                aria-hidden="true"
-              />
-              <div className="relative max-w-3xl">
-                {featured.rating && <StarRating value={featured.rating} size={22} />}
-                <blockquote className="mt-6 whitespace-pre-line font-jakarta text-xl leading-relaxed text-white md:text-2xl">
-                  {featured.message}
-                </blockquote>
-                <figcaption className="mt-8 flex items-center gap-4">
-                  <Avatar t={featured} size={56} light />
-                  <div>
-                    <p className="font-bold text-white">{featured.client_name}</p>
-                    {featured.company && <p className="text-sm text-blue-200">{featured.company}</p>}
-                    {featured.service && <p className="text-sm text-blue-300">{featured.service}</p>}
-                  </div>
-                </figcaption>
-              </div>
-            </figure>
-          )}
-
-          {rest.length > 0 && (
-            <div className="mt-8 columns-1 gap-6 md:columns-2 lg:columns-3">
-              {rest.map((t) => (
-                <figure
-                  key={t.id}
-                  className="mb-6 break-inside-avoid rounded-2xl border border-slate-100 bg-slate-50 p-7 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] dark:border-gray-700 dark:bg-gray-900"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    {t.rating ? <StarRating value={t.rating} size={18} /> : <span />}
-                    <span className="text-xs text-slate-400">{monthYear(t.submitted_at)}</span>
-                  </div>
-                  <blockquote className="mt-4 whitespace-pre-line leading-relaxed text-slate-700 dark:text-slate-200">
-                    {t.message}
-                  </blockquote>
-                  <figcaption className="mt-6 flex items-center gap-3 border-t border-slate-200 pt-5 dark:border-gray-700">
-                    <Avatar t={t} size={44} />
-                    <div className="min-w-0 text-sm">
-                      <p className="font-bold text-primary dark:text-white">{t.client_name}</p>
-                      {t.company && <p className="text-slate-500 dark:text-slate-400">{t.company}</p>}
-                      {t.service && <p className="text-blue-600 dark:text-blue-400">{t.service}</p>}
-                    </div>
-                  </figcaption>
-                </figure>
+          {list.length > 0 && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {list.map((t) => (
+                <TestimonialCard key={t.id} t={t} compact />
               ))}
             </div>
           )}
