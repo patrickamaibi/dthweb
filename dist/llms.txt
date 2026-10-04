@@ -1,14 +1,28 @@
 # DiscoveryTech Hub
 
-> DiscoveryTech Hub, the technology division of DiscoveryHub, is an ICT solutions company in Abuja, Nigeria offering web design and development, ICT training, graphic design, branding, printing, proposal and report writing, and ICT consultancy. It also rents a fully equipped multipurpose space in Abuja that seats 22 people.
+> DiscoveryTech Hub, the technology division of DiscoveryHub, is an ICT solutions company in Abuja, Nigeria serving businesses and organisations across Nigeria and Africa. It offers web design, development and hosting, software development and IT consultancy, AI solutions and automation, ICT solutions and systems integration, digital marketing and social media management, mobile app development, e-commerce development and management, IT training and technical support, and gadgets supply and maintenance. It also rents a fully equipped multipurpose space in Abuja that seats 22 people.
 
 ## Key pages
 - [Home](https://discoverytechhub.com/): overview of services, process and FAQ
-- [Services](https://discoverytechhub.com/services): the seven services with key features
+- [Services](https://discoverytechhub.com/services): the nine technology services with key features, who we serve, and FAQ
 - [The Hub (space rental)](https://discoverytechhub.com/hub): 22-seat multipurpose space, amenities, pricing and booking
 - [About](https://discoverytechhub.com/about): mission, vision, values and working process
 - [Get a quote](https://discoverytechhub.com/quote): contact details and quote request form
-- [Testimonials](https://discoverytechhub.com/testimonials): what clients say about working with DiscoveryTech Hub on websites, branding and ICT services
+- [Testimonials](https://discoverytechhub.com/testimonials): what clients say about working with DiscoveryTech Hub
+
+## Services
+- Web Design, Development and Hosting: custom, mobile-friendly, SEO-ready websites with hosting, domain, business email and maintenance
+- Software Development and IT Consultancy: custom business software, IT strategy, system reviews and technical advice
+- AI Solutions and Automation: AI chatbots, workflow and document automation, AI tools for content and reporting, and staff training
+- ICT Solutions and Systems Integration: workflow automation, integration of payments, CRM, invoicing and communication tools, and ICT setup for offices and schools
+- Digital Marketing and Social Media Management: content, paid campaigns, audience growth and monthly reporting
+- Mobile Application Development: Android and iOS apps, testing, launch and updates, including first versions for startups
+- E-Commerce Development and Management: online stores with local and international payments, delivery integration and store management
+- IT Training and Technical Support: corporate, school and community digital skills training, troubleshooting and support plans
+- Gadgets Supply and Maintenance: device advice, supply of laptops, phones, printers and accessories, repairs, servicing and maintenance plans
+
+## Who we serve
+Startups, small and medium businesses, schools, churches, NGOs, cooperatives and professional firms in Nigeria and across Africa. Most projects are delivered remotely.
 
 ## Facts
 - Location: Plot 740 Aminu Kano Crescent, Wuse 2, FCT Abuja, Abuja, Nigeria
