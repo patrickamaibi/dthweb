@@ -1,15 +1,42 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
+const MIN_DISPLAY_MS = 2000;
+
 export default function Preloader() {
-  const [loading, setLoading] = useState(true);
+  // The static preloader from index.html only exists on a full page load.
+  // If it is missing, the React preloader below is used instead.
+  const [isFirstLoad] = useState(
+    () => typeof document !== "undefined" && !!document.getElementById("static-preloader")
+  );
+  const [loading, setLoading] = useState(!isFirstLoad);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    if (isFirstLoad) {
+      const el = document.getElementById("static-preloader");
+      // The prerender script keeps the static preloader in the saved HTML
+      if (!el || (window as any).__PRERENDER__) return;
+
+      let removeTimer: ReturnType<typeof setTimeout> | undefined;
+      // Count the 2 seconds from page start, not from when React mounts
+      const wait = Math.max(0, MIN_DISPLAY_MS - performance.now());
+      const hideTimer = setTimeout(() => {
+        el.classList.add("hide");
+        removeTimer = setTimeout(() => el.remove(), 500);
+      }, wait);
+
+      return () => {
+        clearTimeout(hideTimer);
+        if (removeTimer) clearTimeout(removeTimer);
+      };
+    }
+
+    // Original behaviour when there is no static preloader
+    const timer = setTimeout(() => setLoading(false), MIN_DISPLAY_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isFirstLoad]);
+
+  if (isFirstLoad) return null;
 
   return (
     <AnimatePresence>

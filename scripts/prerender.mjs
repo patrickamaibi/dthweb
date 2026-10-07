@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 
 const DIST = resolve('dist');
 const PORT = 4173;
-const ROUTES = ['/', '/about', '/services', '/quote', '/hub', '/testimonials'];
+const ROUTES = ['/', '/about', '/services', '/quote', '/hub', '/testimonials', '/socials'];
 
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
@@ -51,6 +51,8 @@ async function main() {
     });
     await page.evaluateOnNewDocument(() => {
       localStorage.setItem('cookieAccepted', 'true');
+      // Tells Preloader.tsx to leave the static preloader in place while snapshotting
+      window.__PRERENDER__ = true;
     });
     await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle2', timeout: 30000 });
     await page.waitForFunction(

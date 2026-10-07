@@ -2,7 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    
+
+    <!-- ✅ STATIC PRELOADER (paints on first frame, removed by Preloader.tsx) -->
+    <link rel="preload" as="image" href="/logo.png" />
+    <style>
+      #static-preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: #ffffff; transition: opacity 0.5s ease-in-out;
+      }
+      html.dark #static-preloader { background: #030712; }
+      #static-preloader.hide { opacity: 0; pointer-events: none; }
+
+      /* Same entrance as the original: scale 0.8 -> 1 and fade in, 0.8s, backOut */
+      #static-preloader .inner {
+        text-align: center;
+        animation: dth-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes dth-pop {
+        from { transform: scale(0.8); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+      }
+
+      #static-preloader img {
+        display: block; margin: 0 auto 2rem;
+        height: 6rem; width: auto; object-fit: contain;
+      }
+      @media (min-width: 768px) { #static-preloader img { height: 8rem; } }
+
+      #static-preloader .bar {
+        height: 4px; width: 12rem; margin: 0 auto;
+        border-radius: 9999px; background: #dbeafe; overflow: hidden;
+      }
+      html.dark #static-preloader .bar { background: #374151; }
+      #static-preloader .bar span {
+        display: block; height: 100%; width: 0; border-radius: 9999px; background: #2563eb;
+        animation: dth-load 1.5s ease-in-out forwards;
+      }
+      html.dark #static-preloader .bar span { background: #3b82f6; }
+      @keyframes dth-load { to { width: 100%; } }
+    </style>
+    <noscript><style>#static-preloader { display: none; }</style></noscript>
+
     <!-- ✅ ANTI-FLASH (FOUC) PROTECTION -->
     <script>
       (function () {
@@ -35,7 +76,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO -->
-    <meta name="keywords" content="web design Nigeria, ICT training, graphic design, branding, digital transformation, ICT consultancy, Abuja, DiscoveryTech Hub" />
+    <meta name="keywords" content="web design Nigeria, software development Nigeria, AI solutions, mobile app development, e-commerce development, digital marketing, IT training, ICT consultancy, gadgets supply and maintenance, Abuja, DiscoveryTech Hub" />
     <meta name="robots" content="index, follow" />
 
     <!-- Google Analytics -->
@@ -54,21 +95,21 @@
 
     <!-- Primary Meta Tags -->
     <title>DiscoveryTech Hub | Your Digital Transformation Partner</title>
-    <meta name="description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
+    <meta name="description" content="Web design, software, AI solutions, mobile apps, e-commerce, digital marketing and IT training in Nigeria and beyond. Transform your business with DiscoveryTech Hub." />
     <meta name="author" content="DiscoveryTech Hub" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@disctechhub" />
     <meta name="twitter:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-    <meta name="twitter:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
+    <meta name="twitter:description" content="Web design, software, AI solutions, mobile apps, e-commerce, digital marketing and IT training in Nigeria and beyond. Transform your business with DiscoveryTech Hub." />
     <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://discoverytechhub.com/" />
     <meta property="og:title" content="DiscoveryTech Hub | Your Digital Transformation Partner" />
-    <meta property="og:description" content="DiscoveryTech Hub offers web design, ICT training, graphic design, branding & consultancy services in Nigeria and beyond. Transform your business today." />
+    <meta property="og:description" content="Web design, software, AI solutions, mobile apps, e-commerce, digital marketing and IT training in Nigeria and beyond. Transform your business with DiscoveryTech Hub." />
     <meta property="og:image" content="https://discoverytechhub.com/og.png" />
 
     <!-- Schema Markup -->
@@ -80,7 +121,7 @@
         "name": "DiscoveryTech Hub",
         "alternateName": "DTH",
         "parentOrganization": { "@type": "Organization", "name": "DiscoveryHub" },
-        "description": "DiscoveryTech Hub offers web design, ICT training, graphic design, branding, and ICT consultancy in Nigeria and beyond.",
+        "description": "DiscoveryTech Hub offers web design, software development, AI solutions, mobile apps, e-commerce, digital marketing, IT training, ICT consultancy, and gadgets supply and maintenance in Nigeria and across Africa.",
         "url": "https://discoverytechhub.com",
         "logo": "https://discoverytechhub.com/logo.png",
         "image": "https://discoverytechhub.com/og.png",
@@ -101,8 +142,21 @@
           "areaServed": "NG",
           "availableLanguage": "English"
         },
-        "areaServed": { "@type": "Country", "name": "Nigeria" },
-        "serviceType": ["Web Design & Development", "ICT Training", "Graphic Design", "Branding", "Printing", "ICT Consultancy"],
+        "areaServed": [
+          { "@type": "Country", "name": "Nigeria" },
+          { "@type": "Continent", "name": "Africa" }
+        ],
+        "serviceType": [
+          "Web Design, Development & Hosting",
+          "Software Development & IT Consultancy",
+          "AI Solutions & Automation",
+          "ICT Solutions & Systems Integration",
+          "Digital Marketing & Social Media Management",
+          "Mobile Application Development",
+          "E-Commerce Development & Management",
+          "IT Training & Technical Support",
+          "Gadgets Supply & Maintenance"
+        ],
         "openingHoursSpecification": [
           {
             "@type": "OpeningHoursSpecification",
@@ -134,6 +188,26 @@
   </head>
 
   <body class="antialiased min-h-screen flex flex-col scroll-smooth">
+    <!-- Static preloader: visible from first paint, removed by Preloader.tsx -->
+    <div id="static-preloader" aria-hidden="true">
+      <div class="inner">
+        <img src="/logo.png" alt="" />
+        <div class="bar"><span></span></div>
+      </div>
+    </div>
+    <script>
+      // Failsafe: never leave visitors stuck on the preloader if the app fails to load
+      (function () {
+        if (window.__PRERENDER__) return;
+        setTimeout(function () {
+          var el = document.getElementById('static-preloader');
+          if (!el) return;
+          el.classList.add('hide');
+          setTimeout(function () { el.remove(); }, 500);
+        }, 4000);
+      })();
+    </script>
+
     <div id="root" class="flex-grow flex flex-col"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
