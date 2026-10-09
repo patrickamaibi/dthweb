@@ -80,7 +80,7 @@ export default function About() {
                 Driving digital transformation for the modern age
               </h3>
               <div className="space-y-4 text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
-                <p>DiscoveryTech Hub is the technology division of DiscoveryHub, an ICT solutions company working where technology, creativity, and education meet. We help businesses, organizations, and individuals modernize the way they work, learn, and grow.</p>
+                <p>DiscoveryTech Hub is the trading name of DiscoveryHub, an ICT solutions company working where technology, creativity, and education meet. We help businesses, organizations, and individuals modernize the way they work, learn, and grow.</p>
                 <p>Our team brings deep expertise in software development, IT consulting, digital marketing, and tech education, delivering practical solutions that turn ideas into measurable results.</p>
               </div>
             </AnimatedSection>
