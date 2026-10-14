@@ -3,7 +3,6 @@ import AnimatedSection from "@/components/AnimatedSection";
 import ServicesList, { services } from "@/components/ServicesList";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { servicesSchema } from "@/lib/site";
 import { ChevronDown } from "lucide-react";
 
 const TITLE = "Web, Software, AI & Mobile App Services in Nigeria | DiscoveryTech Hub";
@@ -111,7 +110,6 @@ export default function Services() {
         <meta name="twitter:description" content={DESCRIPTION} />
         <meta name="twitter:image" content="https://discoverytechhub.com/og.png" />
         <meta name="twitter:image:alt" content="DiscoveryTech Hub Services - Web, Software, Mobile Apps & More" />
-        <script type="application/ld+json">{JSON.stringify(servicesSchema())}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(pageSchema)}</script>
       </Helmet>
