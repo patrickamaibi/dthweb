@@ -44,7 +44,7 @@ export default function AcademyComingSoon() {
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div
             className="absolute -inset-16 transform-gpu bg-cover bg-center"
-            style={{ backgroundImage: "url('/academy1.png')", filter: `blur(${BLUR_PX}px)` }}
+            style={{ backgroundImage: "url('/academy1.webp')", filter: `blur(${BLUR_PX}px)` }}
           />
           <div className="absolute inset-0 bg-white/30" />
         </div>

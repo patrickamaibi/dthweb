@@ -12,6 +12,47 @@ const LOGO_SRC = '/logo.png'; // change if your logo file is named differently
 const PAGE_URL = 'https://discoverytechhub.com/academy/waitlist?ref=share';
 const SHARE_TEXT = 'I just reserved my seat for DiscoveryTech Academy. Join the waitlist:';
 
+/* ---------------------------- SEO / GEO / OG ---------------------------- */
+const SITE_URL = 'https://discoverytechhub.com';
+const CANONICAL = `${SITE_URL}/academy/waitlist`;
+const SEO_TITLE = 'DiscoveryTech Academy | Join the Waitlist';
+const SEO_DESCRIPTION =
+  'Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub.';
+const OG_IMAGE = `${SITE_URL}/ogwaitlist.webp`; // lives in /public
+const OG_IMAGE_ALT = 'DiscoveryTech Academy waitlist: practical AI skills, opening soon in Nigeria';
+
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${CANONICAL}#webpage`,
+      url: CANONICAL,
+      name: SEO_TITLE,
+      description: SEO_DESCRIPTION,
+      inLanguage: 'en-NG',
+      isPartOf: { '@type': 'WebSite', name: 'DiscoveryTech Hub', url: SITE_URL },
+      primaryImageOfPage: { '@type': 'ImageObject', url: OG_IMAGE },
+      about: 'DiscoveryTech Academy, an online AI skills learning platform opening soon',
+      contentLocation: {
+        '@type': 'Place',
+        name: 'Abuja, Nigeria',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'DiscoveryTech Hub',
+        url: SITE_URL,
+        logo: `${SITE_URL}${LOGO_SRC}`,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Abuja',
+          addressCountry: 'NG',
+        },
+      },
+    },
+  ],
+};
+
 const shareLinks = [
   { label: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT} ${PAGE_URL}`)}` },
   { label: 'X', href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(PAGE_URL)}` },
@@ -466,18 +507,34 @@ export default function AcademyWaitlist() {
   return (
     <>
       <Helmet>
-        <title>Join the Academy Waitlist | DiscoveryTech Hub</title>
-        <meta
-          name="description"
-          content="Join the DiscoveryTech Academy waitlist and be first to know when the doors open. Practical digital and AI skills, built in Africa, for Africa."
-        />
-        <link rel="canonical" href="https://discoverytechhub.com/academy/waitlist" />
-        <meta property="og:title" content="Join the Academy Waitlist | DiscoveryTech Hub" />
-        <meta
-          property="og:description"
-          content="Reserve your seat for DiscoveryTech Academy and be first in line when we open."
-        />
-        <meta property="og:url" content="https://discoverytechhub.com/academy/waitlist" />
+        <title>{SEO_TITLE}</title>
+        <meta name="description" content={SEO_DESCRIPTION} />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href={CANONICAL} />
+        <link rel="alternate" hrefLang="en-NG" href={CANONICAL} />
+        <link rel="alternate" hrefLang="x-default" href={CANONICAL} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="DiscoveryTech Hub" />
+        <meta property="og:locale" content="en_NG" />
+        <meta property="og:title" content={SEO_TITLE} />
+        <meta property="og:description" content={SEO_DESCRIPTION} />
+        <meta property="og:url" content={CANONICAL} />
+        <meta property="og:image" content={OG_IMAGE} />
+        <meta property="og:image:type" content="image/webp" />
+        <meta property="og:image:alt" content={OG_IMAGE_ALT} />
+
+        {/* X / Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={SEO_TITLE} />
+        <meta name="twitter:description" content={SEO_DESCRIPTION} />
+        <meta name="twitter:image" content={OG_IMAGE} />
+        <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
+
+        {/* Structured data */}
+        <script type="application/ld+json">{JSON.stringify(JSON_LD)}</script>
+
         {/* Inter, same as the Academy site. Remove these three lines if your site already loads Inter. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
