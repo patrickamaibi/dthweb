@@ -113,6 +113,7 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
     { to: "/about",   label: "About Us"    },
     { to: "/services",label: "Services"    },
     { to: "/hub",     label: "Book a Space"},
+    { to: "/academy", label: "Academy", badge: "New" },
     { to: "https://blog.discoverytechhub.com", label: "Blog", external: true }, // ← NEW
   ];
 
@@ -155,6 +156,11 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                 }`}
               >
                 {link.label}
+                {link.badge && (
+                  <span className="ml-1.5 rounded-full bg-blue-600 px-2 py-0.5 align-middle text-[10px] font-semibold text-white">
+                    {link.badge}
+                  </span>
+                )}
               </Link>
             )
           )}
@@ -220,10 +226,9 @@ export default function Navbar({ theme, setThemeMode }: NavbarProps) {
                       }`}
                     >
                       {link.label}
-                      {/* Highlight badge for Book a Space */}
-                      {link.to === "/hub" && (
+                      {link.badge && (
                         <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
-                          New
+                          {link.badge}
                         </span>
                       )}
                     </Link>

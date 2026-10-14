@@ -15,6 +15,9 @@ import Socials from '@/pages/Socials';
 import Testimonials from '@/pages/Testimonials';
 import Review from '@/pages/Review';
 import Admin from '@/pages/Admin';
+import AcademyWaitlist from '@/pages/AcademyWaitlist';
+import AcademyComingSoon from '@/pages/AcademyComingSoon';
+import AcademyPromo from '@/components/AcademyPromo';
 import { X } from 'lucide-react';
 
 function AppShell({
@@ -26,6 +29,8 @@ function AppShell({
 }) {
   const { pathname } = useLocation();
   const hideFooter = pathname === '/socials' || pathname === '/socials/';
+  const cleanPath = pathname.replace(/\/$/, '');
+  const isWaitlist = cleanPath === '/academy/waitlist';
 
   return (
     <>
@@ -34,26 +39,28 @@ function AppShell({
         className="font-sans antialiased text-[#0A1F44] dark:text-white dark:bg-gray-950 flex flex-col min-h-screen relative"
         style={{ fontFamily: 'Inter, sans-serif' }}
       >
-        <WhatsAppFloating />
+        {!isWaitlist && <WhatsAppFloating />}
         <Preloader />
 
-        <Navbar theme={theme} setThemeMode={setThemeMode} />
+        {!isWaitlist && <Navbar theme={theme} setThemeMode={setThemeMode} />}
 
         <main className="flex-grow">
           <Routes>
-            <Route path="/"                element={<Home />}         />
-            <Route path="/about"           element={<About />}        />
-            <Route path="/services"        element={<Services />}     />
-            <Route path="/quote"           element={<Quote />}        />
-            <Route path="/hub"             element={<HubPage />}      />
-            <Route path="/socials"         element={<Socials />}      />
-            <Route path="/testimonials"    element={<Testimonials />} />
-            <Route path="/review/:token"   element={<Review />}       />
-            <Route path="/admin"           element={<Admin />}        />
+            <Route path="/"                 element={<Home />}            />
+            <Route path="/about"            element={<About />}           />
+            <Route path="/services"         element={<Services />}        />
+            <Route path="/quote"            element={<Quote />}           />
+            <Route path="/hub"              element={<HubPage />}         />
+            <Route path="/socials"          element={<Socials />}         />
+            <Route path="/testimonials"     element={<Testimonials />}    />
+            <Route path="/review/:token"    element={<Review />}          />
+            <Route path="/admin"            element={<Admin />}           />
+            <Route path="/academy/waitlist" element={<AcademyWaitlist />} />
+            <Route path="/academy"          element={<AcademyComingSoon />} />
           </Routes>
         </main>
 
-        {!hideFooter && <Footer theme={theme} setThemeMode={setThemeMode} />}
+        {!hideFooter && !isWaitlist && <Footer theme={theme} setThemeMode={setThemeMode} />}
       </div>
     </>
   );
@@ -124,6 +131,7 @@ function App() {
 
       <Router>
         <AppShell theme={theme} setThemeMode={setThemeMode} />
+        <AcademyPromo ready={!showCookie} />
 
         {/* Cookie Banner */}
         {showCookie && (
