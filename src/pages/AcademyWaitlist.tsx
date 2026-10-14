@@ -3,14 +3,12 @@ import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Check, Copy } from 'lucide-react';
-import AcademyFooterLink from '@/components/AcademyFooterLink';
+import { ArrowLeft, ArrowRight, ArrowUp, Check, Copy, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase'; // same path your Review.tsx uses
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const LOGO_SRC = '/logo.png'; // change if your logo file is named differently
-const HERO_IMAGE = '/dth1.webp'; // lives in /public
 const PAGE_URL = 'https://discoverytechhub.com/academy/waitlist?ref=share';
 const SHARE_TEXT = 'I just reserved my seat for DiscoveryTech Academy. Join the waitlist:';
 
@@ -22,94 +20,82 @@ const shareLinks = [
 
 const perks = ['Free to join', 'Early access before launch', 'Practical AI skills, no coding'];
 
-/* Same typography as the Academy About page: Inter + Courier-style mono eyebrow */
+/* Edit these to match your real routes */
+const FOOTER_LINKS = [
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
+];
+
+/* Conversations shown inside the phone. They play one after another, then loop. */
+type Msg = { role: 'user' | 'ai'; text: string };
+type Scenario = { topic: string; messages: Msg[] };
+
+const SCENARIOS: Scenario[] = [
+  {
+    topic: 'Farming',
+    messages: [
+      { role: 'user', text: 'Can AI help me plan my maize planting season?' },
+      {
+        role: 'ai',
+        text: "Yes. Tell me when your rains usually start and I'll build a simple planting calendar.",
+      },
+      { role: 'user', text: 'Late April.' },
+      { role: 'ai', text: 'Done. Your planting, weeding and harvest windows are mapped out.' },
+    ],
+  },
+  {
+    topic: 'App development',
+    messages: [
+      { role: 'user', text: 'I want to build a booking app for my salon. Where do I start?' },
+      {
+        role: 'ai',
+        text: 'Start with three screens: services, available times and confirmation. I can sketch the flow.',
+      },
+      { role: 'user', text: 'Can you write the first screen?' },
+      { role: 'ai', text: "Here's a clean starter screen with a service list and a Book button." },
+    ],
+  },
+  {
+    topic: 'Document drafting',
+    messages: [
+      { role: 'user', text: 'Draft a polite payment reminder for a client who is two weeks late.' },
+      {
+        role: 'ai',
+        text: "Here's a short, friendly version. It states the amount and due date, and asks for a payment date.",
+      },
+      { role: 'user', text: 'Make it more formal.' },
+      { role: 'ai', text: 'Updated. The tone is now professional, with a clear deadline.' },
+    ],
+  },
+  {
+    topic: 'Graphic design',
+    messages: [
+      { role: 'user', text: 'I need a logo idea for my bakery in Abuja.' },
+      {
+        role: 'ai',
+        text: 'Try a simple wheat mark in warm gold with a rounded wordmark. Want a few colour palettes?',
+      },
+      { role: 'user', text: 'Yes, with a green option.' },
+      { role: 'ai', text: 'Here are three palettes, including a deep green and cream pairing.' },
+    ],
+  },
+];
+
+/* Brand: navy #0A1F44, electric blue #1A4FD6, Inter. Mono eyebrow matches the Academy About page. */
 const PAGE_CSS = `
   .dth-wl { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
   .dth-wl .dth-mono { font-family: 'Courier New', Courier, monospace; }
 `;
 
-/* ---------------- Nigeria outline (simplified, decorative) ----------------
-   [longitude, latitude] points, clockwise from the Benin border at the coast. */
-const NIGERIA_COORDS: [number, number][] = [
-  // Benin border, south to north
-  [2.70, 6.40], [2.72, 6.85], [2.74, 7.50], [2.78, 8.35], [3.05, 9.00], [3.35, 9.50], [3.72, 10.00],
-  [3.70, 10.70], [3.60, 11.70],
-  // Niger border, west to east
-  [3.90, 12.10], [4.10, 12.80], [4.20, 13.40], [4.80, 13.70], [5.40, 13.85], [6.20, 13.55], [7.20, 13.30],
-  [8.30, 13.35], [9.40, 13.20], [10.40, 13.25], [11.50, 13.40], [12.50, 13.45], [13.20, 13.70], [13.60, 13.88],
-  // Lake Chad and Cameroon border, north to south
-  [14.00, 13.50], [14.20, 13.10], [14.20, 12.35], [14.00, 11.90], [13.80, 11.40], [13.75, 10.90], [13.70, 10.40],
-  [13.40, 9.90], [13.05, 9.40], [12.85, 8.95], [12.45, 8.50], [12.10, 8.00], [11.75, 7.50], [11.45, 7.05],
-  [11.10, 6.60], [10.60, 6.45], [9.90, 6.35], [9.30, 6.15], [9.00, 5.60], [8.75, 5.10], [8.55, 4.65],
-  // Atlantic coast, east to west (Niger Delta bulge in the middle)
-  [8.20, 4.50], [7.80, 4.45], [7.35, 4.40], [6.95, 4.35], [6.55, 4.30], [6.20, 4.27], [5.85, 4.45],
-  [5.55, 4.90], [5.35, 5.35], [5.10, 5.70], [4.60, 6.00], [4.00, 6.35], [3.40, 6.42], [2.90, 6.38],
-];
-
-const LON_MIN = 2.3;
-const LON_MAX = 14.9;
-const LAT_MAX = 14.0;
-const LAT_MIN = 4.1;
-const SCALE = 60;
-const PAD = 8;
-const VB_W = Math.round((LON_MAX - LON_MIN) * SCALE + PAD * 2);
-const VB_H = Math.round((LAT_MAX - LAT_MIN) * SCALE + PAD * 2);
-
-const project = (lon: number, lat: number): [number, number] => [
-  (lon - LON_MIN) * SCALE + PAD,
-  (LAT_MAX - lat) * SCALE + PAD,
-];
-const toPath = (coords: [number, number][]) =>
-  'M ' +
-  coords
-    .map(([lo, la]) => project(lo, la))
-    .map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`)
-    .join(' L ') +
-  ' Z';
-
-const NIGERIA_PATH = toPath(NIGERIA_COORDS);
-const ABUJA = project(7.49, 9.08);
-const ABUJA_POS = { left: `${(ABUJA[0] / VB_W) * 100}%`, top: `${(ABUJA[1] / VB_H) * 100}%` };
-
 /* ------------------------------ Pieces ------------------------------ */
-
-function GoldCap({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 120 90" className={className} fill="none" aria-hidden>
-      <defs>
-        <linearGradient id="capGold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fef3c7" />
-          <stop offset="1" stopColor="#fbbf24" />
-        </linearGradient>
-      </defs>
-      <path d="M28 46v18c0 9 64 9 64 0V46L60 58 28 46Z" fill="url(#capGold)" fillOpacity=".65" />
-      <path d="M60 8 116 31 60 54 4 31 60 8Z" fill="url(#capGold)" />
-      <path d="M104 36v30" stroke="#fde68a" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="104" cy="70" r="5" fill="#fde68a" />
-    </svg>
-  );
-}
-
-function CapIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 120 90" className={className} fill="#ffffff" aria-hidden>
-      <path d="M28 46v18c0 9 64 9 64 0V46L60 58 28 46Z" fillOpacity=".7" />
-      <path d="M60 8 116 31 60 54 4 31 60 8Z" />
-    </svg>
-  );
-}
 
 function Brand() {
   const [failed, setFailed] = useState(false);
   return (
     <div className="flex items-center gap-3">
       {failed ? (
-        <span className="flex items-center gap-2 text-base font-bold text-[#0a1f44]">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-blue-700 to-cyan-500">
-            <CapIcon className="h-5 w-5" />
-          </span>
-          DiscoveryTech
-        </span>
+        <span className="text-base font-bold text-[#0A1F44]">DiscoveryTech</span>
       ) : (
         <img src={LOGO_SRC} alt="DiscoveryTech Hub" className="h-9 w-auto" onError={() => setFailed(true)} />
       )}
@@ -119,105 +105,290 @@ function Brand() {
   );
 }
 
-/* Illustration used inside the shape until the real photo loads */
-const C = { blue: '#60a5fa', cyan: '#67e8f9', slate: '#94a3b8', slateDark: '#64748b', amber: '#fde68a', green: '#6ee7b7' };
-const CODE_ROWS: { indent: number; segs: [number, string][] }[] = [
-  { indent: 0, segs: [[14, C.blue], [22, C.cyan], [10, C.slate]] },
-  { indent: 0, segs: [[18, C.blue], [30, C.amber]] },
-  { indent: 1, segs: [[12, C.cyan], [26, C.slate], [16, C.green]] },
-  { indent: 1, segs: [[20, C.slate], [14, C.blue]] },
-  { indent: 2, segs: [[10, C.blue], [34, C.slateDark], [12, C.amber]] },
-  { indent: 2, segs: [[24, C.green], [18, C.cyan]] },
-  { indent: 1, segs: [[16, C.blue], [28, C.slate]] },
-  { indent: 0, segs: [[12, C.blue]] },
-  { indent: 0, segs: [[22, C.cyan], [18, C.slate], [14, C.amber]] },
-  { indent: 1, segs: [[30, C.slate], [12, C.green]] },
-];
-
-function CodeScene() {
+/* Abstract background shapes for the hero */
+function HeroAbstract() {
   return (
-    <g>
-      <rect width={VB_W} height={VB_H} fill="#0a1a45" />
-      {CODE_ROWS.map((row, i) => {
-        let x = VB_W * 0.2 + row.indent * 22;
-        const y = VB_H * 0.16 + i * 40;
-        return (
-          <g key={i} opacity=".8">
-            {row.segs.map(([w, color], j) => {
-              const width = w * 3.6;
-              const el = <rect key={j} x={x} y={y} width={width} height={10} rx={5} fill={color} />;
-              x += width + 12;
-              return el;
-            })}
-          </g>
-        );
-      })}
-    </g>
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full bg-[#1A4FD6]/15 blur-3xl" />
+      <div className="absolute -bottom-10 -left-32 h-[24rem] w-[24rem] rounded-full bg-[#0A1F44]/10 blur-3xl" />
+      <div
+        className="absolute left-[4%] top-[14%] hidden h-40 w-40 opacity-30 lg:block"
+        style={{
+          backgroundImage: 'radial-gradient(#1A4FD6 1.2px, transparent 1.2px)',
+          backgroundSize: '20px 20px',
+        }}
+      />
+    </div>
   );
 }
 
-function NigeriaCard({ reduce }: { reduce: boolean }) {
-  const [imgOk, setImgOk] = useState(false);
+/* Flowing abstract edge at the bottom of the hero. Last layer matches the footer colour. */
+function HeroEdge() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 1440 160"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute -bottom-px left-0 h-24 w-full sm:h-32 lg:h-40"
+    >
+      <path
+        d="M0 90 C 180 30, 360 30, 540 80 S 900 150, 1100 90 S 1330 30, 1440 70 L1440 160 L0 160 Z"
+        fill="#1A4FD6"
+        fillOpacity=".08"
+      />
+      <path
+        d="M0 115 C 220 60, 420 60, 620 105 S 1000 160, 1200 110 S 1380 70, 1440 95 L1440 160 L0 160 Z"
+        fill="#1A4FD6"
+        fillOpacity=".12"
+      />
+      <path
+        d="M0 112 C 240 70, 480 70, 720 104 S 1200 140, 1440 100"
+        stroke="#1A4FD6"
+        strokeOpacity=".25"
+        strokeWidth="1.5"
+        fill="none"
+      />
+      <path d="M0 140 C 240 100, 480 100, 720 130 S 1200 160, 1440 125 L1440 160 L0 160 Z" fill="#F3F6FE" />
+    </svg>
+  );
+}
+
+function TypingDots() {
+  return (
+    <span className="flex items-center gap-1 py-1" aria-hidden>
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="h-1.5 w-1.5 rounded-full bg-slate-400 motion-safe:animate-bounce"
+          style={{ animationDelay: `${i * 0.15}s` }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function PhoneChat({ reduce }: { reduce: boolean }) {
+  const [idx, setIdx] = useState(0);
+  const [shown, setShown] = useState(reduce ? SCENARIOS[0].messages.length : 0);
+  const [typing, setTyping] = useState(false);
 
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => setImgOk(true);
-    img.onerror = () => setImgOk(false);
-    img.src = HERO_IMAGE;
-  }, []);
+    if (reduce) {
+      setIdx(0);
+      setShown(SCENARIOS[0].messages.length);
+      setTyping(false);
+      return;
+    }
+
+    let cancelled = false;
+    const timers: number[] = [];
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        timers.push(window.setTimeout(resolve, ms));
+      });
+
+    (async () => {
+      let s = 0;
+      while (!cancelled) {
+        setIdx(s);
+        setShown(0);
+        setTyping(false);
+        await wait(900);
+
+        const msgs = SCENARIOS[s].messages;
+        for (let i = 0; i < msgs.length; i++) {
+          if (cancelled) return;
+          if (msgs[i].role === 'ai') {
+            setTyping(true);
+            await wait(1400);
+            if (cancelled) return;
+            setTyping(false);
+          } else {
+            await wait(700);
+          }
+          if (cancelled) return;
+          setShown(i + 1);
+          await wait(1500);
+        }
+
+        await wait(2600);
+        s = (s + 1) % SCENARIOS.length;
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      timers.forEach((t) => window.clearTimeout(t));
+    };
+  }, [reduce]);
+
+  const scenario = SCENARIOS[idx];
+
+  const fade = {
+    initial: { opacity: 0, y: 10, scale: 0.98 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.3, ease: 'easeOut' as const },
+  };
 
   return (
-    <div className="relative mx-auto w-full max-w-[36rem] lg:mx-0 lg:max-w-none lg:translate-x-5 xl:translate-x-8">
-      <div aria-hidden className="absolute -inset-10 rounded-full bg-blue-400/30 blur-3xl" />
+    <div className="relative flex w-full justify-center">
+      {/* Abstract rings, glow and dots behind the phone */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="absolute h-[22rem] w-[22rem] rounded-full bg-[#1A4FD6]/25 blur-3xl" />
+        <div className="absolute h-[26rem] w-[26rem] rounded-full border border-[#1A4FD6]/20" />
+        <div className="absolute h-[36rem] w-[36rem] rounded-full border border-[#1A4FD6]/10" />
+        <div
+          className="absolute -right-2 bottom-4 h-32 w-32 opacity-30"
+          style={{
+            backgroundImage: 'radial-gradient(#0A1F44 1.2px, transparent 1.2px)',
+            backgroundSize: '16px 16px',
+          }}
+        />
+      </div>
+
       <motion.div
-        initial={reduce ? false : { opacity: 0, scale: 0.94, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        initial={reduce ? false : { opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full drop-shadow-[0_30px_50px_rgba(30,64,175,0.28)]"
-        style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
+        className="relative"
       >
-        {/* Photo cut into the shape of Nigeria, with a white outline */}
-        <svg
-          viewBox={`0 0 ${VB_W} ${VB_H}`}
-          className="absolute inset-0 h-full w-full"
-          fill="none"
+        <motion.div
+          animate={reduce ? undefined : { y: [0, -10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           role="img"
-          aria-label="Map of Nigeria with Abuja marked"
+          aria-label="Animated preview of chats between learners and the Academy AI assistant, covering farming, app development, document drafting and graphic design"
+          className="relative h-[35.5rem] w-[17.5rem] rounded-[2.8rem] bg-[#0A1F44] p-2.5 shadow-[0_40px_80px_-20px_rgba(10,31,68,0.45)] sm:h-[38rem] sm:w-[19rem]"
         >
-          <defs>
-            <clipPath id="nigeria-clip">
-              <path d={NIGERIA_PATH} />
-            </clipPath>
-            <linearGradient id="nigeria-tint" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#1e3a8a" stopOpacity=".25" />
-              <stop offset="1" stopColor="#1e3a8a" stopOpacity="0" />
-            </linearGradient>
-          </defs>
+          {/* Side buttons */}
+          <span aria-hidden className="absolute -left-[3px] top-24 h-8 w-[3px] rounded-l bg-[#0A1F44]" />
+          <span aria-hidden className="absolute -left-[3px] top-36 h-12 w-[3px] rounded-l bg-[#0A1F44]" />
+          <span aria-hidden className="absolute -right-[3px] top-32 h-16 w-[3px] rounded-r bg-[#0A1F44]" />
 
-          <g clipPath="url(#nigeria-clip)">
-            <rect width={VB_W} height={VB_H} fill="#0a1a45" />
-            {imgOk ? (
-              <image href={HERO_IMAGE} x="0" y="0" width={VB_W} height={VB_H} preserveAspectRatio="xMidYMid slice" />
-            ) : (
-              <CodeScene />
-            )}
-            <rect width={VB_W} height={VB_H} fill="url(#nigeria-tint)" />
-          </g>
+          <div className="relative flex h-full flex-col overflow-hidden rounded-[2.3rem] bg-white">
+            {/* Island */}
+            <span aria-hidden className="absolute left-1/2 top-3 z-10 h-5 w-20 -translate-x-1/2 rounded-full bg-[#0A1F44]" />
 
-          <path d={NIGERIA_PATH} stroke="#ffffff" strokeOpacity=".95" strokeWidth="5" strokeLinejoin="round" />
-        </svg>
+            {/* Chat header */}
+            <div className="flex items-center gap-3 border-b border-slate-100 px-5 pb-3 pt-11">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#0A1F44] to-[#1A4FD6] text-white">
+                <Sparkles className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 leading-tight">
+                <p className="text-sm font-semibold text-[#0A1F44]">Academy Assistant</p>
+                <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={scenario.topic}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.2 }}
+                      className="truncate"
+                    >
+                      Helping with {scenario.topic.toLowerCase()}
+                    </motion.span>
+                  </AnimatePresence>
+                </p>
+              </div>
+            </div>
 
-        {/* Abuja marker */}
-        <div className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2" style={ABUJA_POS}>
-          <span className="absolute inset-0 rounded-full bg-white/70 motion-safe:animate-ping" />
-          <span className="relative block h-5 w-5 rounded-full border-[5px] border-white bg-blue-700 shadow-lg" />
-          <GoldCap className="absolute -top-9 left-1/2 h-8 w-10 -translate-x-1/2 drop-shadow-md" />
-          <span className="dth-mono absolute left-8 top-1/2 -translate-y-1/2 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] text-blue-800 shadow">
-            ABUJA
-          </span>
-        </div>
+            {/* Messages */}
+            <div
+              className="flex flex-1 flex-col justify-end gap-2.5 overflow-hidden px-4 py-4"
+              style={{
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 16%)',
+                maskImage: 'linear-gradient(to bottom, transparent, black 16%)',
+              }}
+            >
+              <AnimatePresence initial={false}>
+                {scenario.messages.slice(0, shown).map((m, i) => (
+                  <motion.div
+                    key={`m-${idx}-${i}`}
+                    {...fade}
+                    className={
+                      m.role === 'user'
+                        ? 'max-w-[85%] self-end rounded-2xl rounded-br-md bg-[#1A4FD6] px-3.5 py-2.5 text-[13px] leading-snug text-white'
+                        : 'max-w-[85%] self-start rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-2.5 text-[13px] leading-snug text-[#0A1F44]'
+                    }
+                  >
+                    {m.text}
+                  </motion.div>
+                ))}
+                {typing && (
+                  <motion.div
+                    key={`typing-${idx}`}
+                    {...fade}
+                    className="self-start rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-2"
+                  >
+                    <TypingDots />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Composer */}
+            <div className="flex items-center gap-2 px-4 pb-5 pt-2">
+              <div className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-xs text-slate-400">
+                Ask anything...
+              </div>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#1A4FD6] text-white">
+                <ArrowUp className="h-4 w-4" />
+              </span>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="bg-[#F3F6FE] px-5 pb-8 pt-6">
+      <div className="mx-auto w-full max-w-7xl">
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+          <div className="max-w-sm">
+            <Brand />
+            <p className="mt-4 text-sm leading-relaxed text-slate-600">
+              Your Digital Transformation Partner. ICT training and digital services from Abuja, Nigeria.
+            </p>
+          </div>
+
+          <nav aria-label="Footer" className="flex gap-16 text-sm">
+            <div>
+              <p className="dth-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">Explore</p>
+              <ul className="mt-4 space-y-2.5">
+                {FOOTER_LINKS.map((l) => (
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-slate-600 transition hover:text-[#0A1F44]">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="dth-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">Academy</p>
+              <ul className="mt-4 space-y-2.5">
+                <li>
+                  <a href="#waitlist-email" className="text-slate-600 transition hover:text-[#0A1F44]">
+                    Join the waitlist
+                  </a>
+                </li>
+                <li className="text-slate-500">Opening soon</li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-2 border-t border-slate-200 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} DiscoveryTech Hub. All rights reserved.</p>
+          <p>Abuja, Nigeria</p>
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -226,7 +397,7 @@ function NigeriaCard({ reduce }: { reduce: boolean }) {
 export default function AcademyWaitlist() {
   const reduce = !!useReducedMotion();
   const [params] = useSearchParams();
-  const ref = (params.get('ref') || '').slice(0, 40);
+  const ref = (params.get('ref') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 40);
 
   const [email, setEmail] = useState('');
   const [trap, setTrap] = useState(''); // honeypot for bots
@@ -240,7 +411,7 @@ export default function AcademyWaitlist() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (trap) return;
+    if (trap || status === 'loading') return;
 
     if (!supabase) {
       setStatus('error');
@@ -255,19 +426,25 @@ export default function AcademyWaitlist() {
     }
 
     setStatus('loading');
-    const { data, error } = await supabase.functions.invoke('academy-waitlist', {
-      body: { email: cleanEmail, source: ref || 'waitlist-page' },
-    });
 
-    if (error) {
+    try {
+      const { data, error } = await supabase.functions.invoke('academy-waitlist', {
+        body: { email: cleanEmail, source: ref || 'waitlist-page' },
+      });
+
+      if (error || data?.error) {
+        setStatus('error');
+        setMessage('Something went wrong. Please try again.');
+        return;
+      }
+
+      setPosition(typeof data?.position === 'number' ? data.position : null);
+      setAlready(Boolean(data?.already));
+      setStatus('success');
+    } catch {
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
-      return;
+      setMessage('Connection problem. Check your network and try again.');
     }
-
-    setPosition(typeof data?.position === 'number' ? data.position : null);
-    setAlready(Boolean(data?.already));
-    setStatus('success');
   };
 
   const copyLink = async () => {
@@ -281,9 +458,9 @@ export default function AcademyWaitlist() {
   };
 
   const rise = (delay: number) => ({
-    initial: reduce ? false : { opacity: 0, y: 22 },
+    initial: reduce ? false : { opacity: 0, y: 18 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+    transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   });
 
   return (
@@ -311,14 +488,14 @@ export default function AcademyWaitlist() {
         <style>{PAGE_CSS}</style>
       </Helmet>
 
-      <div className="dth-wl flex min-h-screen flex-col bg-[#f3f6fe] text-[#0a1f44]">
+      <div className="dth-wl flex min-h-screen flex-col bg-[#F3F6FE] text-[#0A1F44]">
         {/* Header */}
         <header className="relative z-20 border-b border-slate-200/70 bg-white/90 backdrop-blur">
           <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-5">
             <Brand />
             <Link
               to="/"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+              className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-[#0A1F44]"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to site
@@ -327,33 +504,29 @@ export default function AcademyWaitlist() {
         </header>
 
         {/* Hero */}
-        <section className="relative flex-1 overflow-hidden bg-gradient-to-b from-[#c9d8f7] via-[#dbe5fb] to-[#eef3fe]">
-          {/* Curved bottom edge */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-44 left-1/2 h-72 w-[150%] -translate-x-1/2 rounded-[50%] bg-[#f3f6fe]"
-          />
+        <section className="relative flex-1 overflow-hidden bg-gradient-to-b from-[#d5e1fb] via-[#e3ebfc] to-[#F3F6FE]">
+          <HeroAbstract />
 
-          <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-5 pb-32 pt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:pb-40 lg:pt-16">
+          <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-5 pb-32 pt-12 lg:grid-cols-[1fr_0.85fr] lg:gap-10 lg:pb-44 lg:pt-16">
             {/* Text and form */}
             <div className="order-1">
               <motion.p
                 {...rise(0.05)}
-                className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-blue-700"
+                className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]"
               >
                 DiscoveryTech Academy · Opening soon
               </motion.p>
 
               <motion.h1
                 {...rise(0.12)}
-                className="mt-5 text-[2.9rem] font-extrabold leading-[1] tracking-[-0.03em] text-[#0a1230] sm:text-6xl lg:text-[3.5rem] xl:text-[4.25rem]"
+                className="mt-5 text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.03em] text-[#0A1F44] sm:text-6xl lg:text-[3.25rem] xl:text-[4rem]"
               >
-                Nigeria's next skills start here.
+                Learn practical AI, one day at a time.
               </motion.h1>
 
-              <motion.p {...rise(0.2)} className="mt-6 max-w-xl text-xl leading-relaxed text-slate-500">
+              <motion.p {...rise(0.2)} className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
                 Join the waitlist for{' '}
-                <strong className="font-semibold text-[#0a1230]">DiscoveryTech Academy</strong>, the e-learning
+                <strong className="font-semibold text-[#0A1F44]">DiscoveryTech Academy</strong>, the e-learning
                 platform of DiscoveryTech Hub in Abuja, and be the first to know when we open our doors.
               </motion.p>
 
@@ -379,20 +552,10 @@ export default function AcademyWaitlist() {
                       />
 
                       <div className="flex flex-col gap-3 sm:flex-row">
-                        <div className="relative flex-1">
+                        <div className="flex-1">
                           <label htmlFor="waitlist-email" className="sr-only">
                             Email address
                           </label>
-                          <svg
-                            viewBox="0 0 24 24"
-                            className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                          >
-                            <rect x="3" y="5" width="18" height="14" rx="3" />
-                            <path d="m4 7 8 6 8-6" />
-                          </svg>
                           <input
                             id="waitlist-email"
                             type="email"
@@ -404,14 +567,14 @@ export default function AcademyWaitlist() {
                               setEmail(e.target.value);
                               if (status === 'error') setStatus('idle');
                             }}
-                            className="h-14 w-full rounded-xl border border-slate-200 bg-white pl-12 pr-4 text-base text-slate-900 placeholder-slate-400 shadow-sm outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-600/15"
+                            className="h-12 w-full rounded-lg border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder-slate-400 shadow-sm outline-none transition focus:border-[#1A4FD6] focus:ring-4 focus:ring-[#1A4FD6]/15"
                           />
                         </div>
 
                         <button
                           type="submit"
                           disabled={status === 'loading'}
-                          className="group inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-blue-700 px-7 font-semibold text-white shadow-lg shadow-blue-700/25 transition hover:bg-blue-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+                          className="group inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#1A4FD6] px-6 font-semibold text-white shadow-lg shadow-[#1A4FD6]/25 transition hover:bg-[#153FB0] disabled:cursor-not-allowed disabled:opacity-70"
                         >
                           {status === 'loading' ? (
                             <>
@@ -421,7 +584,7 @@ export default function AcademyWaitlist() {
                           ) : (
                             <>
                               Join the waitlist
-                              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                             </>
                           )}
                         </button>
@@ -433,16 +596,7 @@ export default function AcademyWaitlist() {
                         </p>
                       )}
 
-                      <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
-                        {perks.map((p) => (
-                          <li key={p} className="flex items-center gap-2 text-sm text-slate-600">
-                            <span className="grid h-4 w-4 place-items-center rounded-full bg-blue-700 text-white">
-                              <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
-                            </span>
-                            {p}
-                          </li>
-                        ))}
-                      </ul>
+                      <p className="mt-4 text-sm text-slate-500">{perks.join(' · ')}</p>
                     </motion.form>
                   ) : (
                     <motion.div
@@ -452,43 +606,40 @@ export default function AcademyWaitlist() {
                       transition={{ duration: 0.5 }}
                       className="mt-8 max-w-xl"
                     >
-                      <p className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-blue-700">
+                      <p className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">
                         {already ? 'Already registered' : "You're in"}
                       </p>
-                      <p className="mt-2 text-2xl font-bold text-[#0a1230]">
+                      <p className="mt-2 text-2xl font-bold text-[#0A1F44]">
                         {already ? "You're already on the list." : 'Seat reserved. Check your inbox.'}
                       </p>
 
                       {/* Founding learner pass */}
                       <motion.div
-                        initial={reduce ? false : { opacity: 0, rotate: -1.5, y: 14 }}
-                        animate={{ opacity: 1, rotate: 0, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                        className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-blue-900/10"
+                        initial={reduce ? false : { opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-[#0A1F44]/10"
                       >
-                        <div
-                          className="absolute inset-y-0 left-0 w-1.5"
-                          style={{ background: 'linear-gradient(#008751 33%, #e5e7eb 33% 66%, #008751 66%)' }}
-                        />
-                        <div className="py-5 pl-7 pr-5">
+                        <div className="absolute inset-y-0 left-0 w-1 bg-[#1A4FD6]" />
+                        <div className="py-5 pl-6 pr-5">
                           <div className="flex items-center justify-between">
-                            <p className="dth-mono text-[10px] font-bold uppercase tracking-[0.2em] text-blue-700">
+                            <p className="dth-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">
                               Founding learner pass
                             </p>
                             <p className="dth-mono text-[10px] uppercase tracking-[0.2em] text-slate-400">Admit one</p>
                           </div>
-                          <p className="dth-mono mt-4 text-4xl font-bold tracking-tight text-blue-700">
+                          <p className="dth-mono mt-4 text-4xl font-bold tracking-tight text-[#0A1F44]">
                             {position ? `#${String(position).padStart(4, '0')}` : 'FOUNDING'}
                           </p>
                           <p className="mt-1 text-xs text-slate-500">DiscoveryTech Academy · Opening soon</p>
                           <div className="my-4 border-t border-dashed border-slate-300" />
                           <p className="dth-mono text-[10px] uppercase tracking-[0.2em] text-slate-400">Reserved for</p>
-                          <p className="dth-mono mt-1 truncate text-sm text-[#0a1230]">{cleanEmail}</p>
+                          <p className="dth-mono mt-1 truncate text-sm text-[#0A1F44]">{cleanEmail}</p>
                         </div>
                       </motion.div>
 
                       {/* Share */}
-                      <p className="mt-6 text-sm font-semibold text-[#0a1230]">Share your pass</p>
+                      <p className="mt-6 text-sm font-semibold text-[#0A1F44]">Share your pass</p>
                       <div className="mt-3 flex flex-wrap gap-2">
                         {shareLinks.map((s) => (
                           <a
@@ -496,7 +647,7 @@ export default function AcademyWaitlist() {
                             href={s.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
                           >
                             {s.label}
                           </a>
@@ -504,7 +655,7 @@ export default function AcademyWaitlist() {
                         <button
                           type="button"
                           onClick={copyLink}
-                          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
                         >
                           {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                           {copied ? 'Copied' : 'Copy link'}
@@ -516,16 +667,16 @@ export default function AcademyWaitlist() {
               </motion.div>
             </div>
 
-            {/* Map */}
+            {/* Phone */}
             <div className="order-2">
-              <NigeriaCard reduce={reduce} />
+              <PhoneChat reduce={reduce} />
             </div>
           </div>
+
+          <HeroEdge />
         </section>
 
-        <footer className="relative z-10 bg-[#f3f6fe] px-5 pb-8 pt-2 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} DiscoveryTech Hub · Abuja, Nigeria
-        </footer>
+        <SiteFooter />
       </div>
     </>
   );

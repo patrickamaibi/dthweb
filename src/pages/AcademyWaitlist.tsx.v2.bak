@@ -1,0 +1,432 @@
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Check, Copy } from 'lucide-react';
+import { supabase } from '@/lib/supabase'; // same path your Review.tsx uses
+
+type Status = 'idle' | 'loading' | 'success' | 'error';
+
+const LOGO_SRC = '/logo.png'; // change if your logo file is named differently
+const HERO_IMAGE = '/dth1.webp'; // lives in /public
+const PAGE_URL = 'https://discoverytechhub.com/academy/waitlist?ref=share';
+const SHARE_TEXT = 'I just reserved my seat for DiscoveryTech Academy. Join the waitlist:';
+
+const shareLinks = [
+  { label: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT} ${PAGE_URL}`)}` },
+  { label: 'X', href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(PAGE_URL)}` },
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(PAGE_URL)}` },
+];
+
+const perks = ['Free to join', 'Early access before launch', 'Practical AI skills, no coding'];
+
+/* Brand: navy #0A1F44, electric blue #1A4FD6, Inter. Mono eyebrow matches the Academy About page. */
+const PAGE_CSS = `
+  .dth-wl { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+  .dth-wl .dth-mono { font-family: 'Courier New', Courier, monospace; }
+`;
+
+/* ---------------- Nigeria outline (simplified, decorative) ----------------
+   [longitude, latitude] points, clockwise from the Benin border at the coast. */
+const NIGERIA_COORDS: [number, number][] = [
+  // Benin border, south to north
+  [2.70, 6.40], [2.72, 6.85], [2.74, 7.50], [2.78, 8.35], [3.05, 9.00], [3.35, 9.50], [3.72, 10.00],
+  [3.70, 10.70], [3.60, 11.70],
+  // Niger border, west to east
+  [3.90, 12.10], [4.10, 12.80], [4.20, 13.40], [4.80, 13.70], [5.40, 13.85], [6.20, 13.55], [7.20, 13.30],
+  [8.30, 13.35], [9.40, 13.20], [10.40, 13.25], [11.50, 13.40], [12.50, 13.45], [13.20, 13.70], [13.60, 13.88],
+  // Lake Chad and Cameroon border, north to south
+  [14.00, 13.50], [14.20, 13.10], [14.20, 12.35], [14.00, 11.90], [13.80, 11.40], [13.75, 10.90], [13.70, 10.40],
+  [13.40, 9.90], [13.05, 9.40], [12.85, 8.95], [12.45, 8.50], [12.10, 8.00], [11.75, 7.50], [11.45, 7.05],
+  [11.10, 6.60], [10.60, 6.45], [9.90, 6.35], [9.30, 6.15], [9.00, 5.60], [8.75, 5.10], [8.55, 4.65],
+  // Atlantic coast, east to west (Niger Delta bulge in the middle)
+  [8.20, 4.50], [7.80, 4.45], [7.35, 4.40], [6.95, 4.35], [6.55, 4.30], [6.20, 4.27], [5.85, 4.45],
+  [5.55, 4.90], [5.35, 5.35], [5.10, 5.70], [4.60, 6.00], [4.00, 6.35], [3.40, 6.42], [2.90, 6.38],
+];
+
+const LON_MIN = 2.3;
+const LON_MAX = 14.9;
+const LAT_MAX = 14.0;
+const LAT_MIN = 4.1;
+const SCALE = 60;
+const PAD = 8;
+const VB_W = Math.round((LON_MAX - LON_MIN) * SCALE + PAD * 2);
+const VB_H = Math.round((LAT_MAX - LAT_MIN) * SCALE + PAD * 2);
+
+const project = (lon: number, lat: number): [number, number] => [
+  (lon - LON_MIN) * SCALE + PAD,
+  (LAT_MAX - lat) * SCALE + PAD,
+];
+const toPath = (coords: [number, number][]) =>
+  'M ' +
+  coords
+    .map(([lo, la]) => project(lo, la))
+    .map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`)
+    .join(' L ') +
+  ' Z';
+
+const NIGERIA_PATH = toPath(NIGERIA_COORDS);
+const ABUJA = project(7.49, 9.08);
+const ABUJA_POS = { left: `${(ABUJA[0] / VB_W) * 100}%`, top: `${(ABUJA[1] / VB_H) * 100}%` };
+
+/* ------------------------------ Pieces ------------------------------ */
+
+function Brand() {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="flex items-center gap-3">
+      {failed ? (
+        <span className="text-base font-bold text-[#0A1F44]">DiscoveryTech</span>
+      ) : (
+        <img src={LOGO_SRC} alt="DiscoveryTech Hub" className="h-9 w-auto" onError={() => setFailed(true)} />
+      )}
+      <span className="h-6 w-px bg-slate-300" />
+      <span className="text-[12px] font-medium uppercase tracking-[0.3em] text-slate-600">Academy</span>
+    </div>
+  );
+}
+
+function NigeriaCard({ reduce }: { reduce: boolean }) {
+  const [imgOk, setImgOk] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImgOk(true);
+    img.onerror = () => setImgOk(false);
+    img.src = HERO_IMAGE;
+  }, []);
+
+  return (
+    <div className="relative mx-auto w-full max-w-[36rem] lg:mx-0 lg:max-w-none lg:translate-x-5 xl:translate-x-8">
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full"
+        style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
+      >
+        {/* Photo cut into the shape of Nigeria */}
+        <svg
+          viewBox={`0 0 ${VB_W} ${VB_H}`}
+          className="absolute inset-0 h-full w-full"
+          fill="none"
+          role="img"
+          aria-label="Map of Nigeria with Abuja marked"
+        >
+          <defs>
+            <clipPath id="nigeria-clip">
+              <path d={NIGERIA_PATH} />
+            </clipPath>
+          </defs>
+
+          <g clipPath="url(#nigeria-clip)">
+            <rect width={VB_W} height={VB_H} fill="#0A1F44" />
+            {imgOk && (
+              <>
+                <image href={HERO_IMAGE} x="0" y="0" width={VB_W} height={VB_H} preserveAspectRatio="xMidYMid slice" />
+                <rect width={VB_W} height={VB_H} fill="#0A1F44" fillOpacity=".12" />
+              </>
+            )}
+          </g>
+        </svg>
+
+        {/* Abuja marker */}
+        <div className="absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2" style={ABUJA_POS}>
+          <span className="relative block h-4 w-4 rounded-full border-[4px] border-white bg-[#1A4FD6]" />
+          <span className="dth-mono absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white px-2.5 py-1 text-[10px] font-bold tracking-[0.2em] text-[#0A1F44]">
+            ABUJA
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ------------------------------- Page ------------------------------- */
+
+export default function AcademyWaitlist() {
+  const reduce = !!useReducedMotion();
+  const [params] = useSearchParams();
+  const ref = (params.get('ref') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 40);
+
+  const [email, setEmail] = useState('');
+  const [trap, setTrap] = useState(''); // honeypot for bots
+  const [status, setStatus] = useState<Status>('idle');
+  const [message, setMessage] = useState('');
+  const [position, setPosition] = useState<number | null>(null);
+  const [already, setAlready] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const cleanEmail = email.trim().toLowerCase();
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (trap || status === 'loading') return;
+
+    if (!supabase) {
+      setStatus('error');
+      setMessage('The waitlist service is unavailable right now.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setStatus('error');
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+
+    setStatus('loading');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('academy-waitlist', {
+        body: { email: cleanEmail, source: ref || 'waitlist-page' },
+      });
+
+      if (error || data?.error) {
+        setStatus('error');
+        setMessage('Something went wrong. Please try again.');
+        return;
+      }
+
+      setPosition(typeof data?.position === 'number' ? data.position : null);
+      setAlready(Boolean(data?.already));
+      setStatus('success');
+    } catch {
+      setStatus('error');
+      setMessage('Connection problem. Check your network and try again.');
+    }
+  };
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(PAGE_URL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard blocked: ignore */
+    }
+  };
+
+  const rise = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+  });
+
+  return (
+    <>
+      <Helmet>
+        <title>Join the Academy Waitlist | DiscoveryTech Hub</title>
+        <meta
+          name="description"
+          content="Join the DiscoveryTech Academy waitlist and be first to know when the doors open. Practical digital and AI skills, built in Africa, for Africa."
+        />
+        <link rel="canonical" href="https://discoverytechhub.com/academy/waitlist" />
+        <meta property="og:title" content="Join the Academy Waitlist | DiscoveryTech Hub" />
+        <meta
+          property="og:description"
+          content="Reserve your seat for DiscoveryTech Academy and be first in line when we open."
+        />
+        <meta property="og:url" content="https://discoverytechhub.com/academy/waitlist" />
+        {/* Inter, same as the Academy site. Remove these three lines if your site already loads Inter. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        />
+        <style>{PAGE_CSS}</style>
+      </Helmet>
+
+      <div className="dth-wl flex min-h-screen flex-col bg-white text-[#0A1F44]">
+        {/* Header */}
+        <header className="border-b border-slate-200 bg-white">
+          <div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between px-5">
+            <Brand />
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-[#0A1F44]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to site
+            </Link>
+          </div>
+        </header>
+
+        {/* Hero */}
+        <section className="flex-1">
+          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-5 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:py-20">
+            {/* Text and form */}
+            <div className="order-1">
+              <motion.p
+                {...rise(0.05)}
+                className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]"
+              >
+                DiscoveryTech Academy · Opening soon
+              </motion.p>
+
+              <motion.h1
+                {...rise(0.12)}
+                className="mt-5 text-[2.75rem] font-extrabold leading-[1.02] tracking-[-0.03em] text-[#0A1F44] sm:text-6xl lg:text-[3.5rem] xl:text-[4.25rem]"
+              >
+                Nigeria's next skills start here.
+              </motion.h1>
+
+              <motion.p {...rise(0.2)} className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+                Join the waitlist for{' '}
+                <strong className="font-semibold text-[#0A1F44]">DiscoveryTech Academy</strong>, the e-learning
+                platform of DiscoveryTech Hub in Abuja, and be the first to know when we open our doors.
+              </motion.p>
+
+              <motion.div {...rise(0.28)}>
+                <AnimatePresence mode="wait">
+                  {status !== 'success' ? (
+                    <motion.form
+                      key="form"
+                      onSubmit={submit}
+                      noValidate
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="mt-8 max-w-xl"
+                    >
+                      <input
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={trap}
+                        onChange={(e) => setTrap(e.target.value)}
+                        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                        aria-hidden
+                      />
+
+                      <div className="flex flex-col gap-3 sm:flex-row">
+                        <div className="flex-1">
+                          <label htmlFor="waitlist-email" className="sr-only">
+                            Email address
+                          </label>
+                          <input
+                            id="waitlist-email"
+                            type="email"
+                            inputMode="email"
+                            autoComplete="email"
+                            placeholder="Enter your email address"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                              if (status === 'error') setStatus('idle');
+                            }}
+                            className="h-12 w-full rounded-lg border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder-slate-400 outline-none transition focus:border-[#1A4FD6] focus:ring-4 focus:ring-[#1A4FD6]/15"
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={status === 'loading'}
+                          className="group inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-[#1A4FD6] px-6 font-semibold text-white transition hover:bg-[#153FB0] disabled:cursor-not-allowed disabled:opacity-70"
+                        >
+                          {status === 'loading' ? (
+                            <>
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                              Reserving...
+                            </>
+                          ) : (
+                            <>
+                              Join the waitlist
+                              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {status === 'error' && (
+                        <p role="alert" className="mt-3 text-sm font-medium text-rose-600">
+                          {message}
+                        </p>
+                      )}
+
+                      <p className="mt-4 text-sm text-slate-500">{perks.join(' · ')}</p>
+                    </motion.form>
+                  ) : (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="mt-8 max-w-xl"
+                    >
+                      <p className="dth-mono text-[12px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">
+                        {already ? 'Already registered' : "You're in"}
+                      </p>
+                      <p className="mt-2 text-2xl font-bold text-[#0A1F44]">
+                        {already ? "You're already on the list." : 'Seat reserved. Check your inbox.'}
+                      </p>
+
+                      {/* Founding learner pass */}
+                      <motion.div
+                        initial={reduce ? false : { opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white"
+                      >
+                        <div className="absolute inset-y-0 left-0 w-1 bg-[#1A4FD6]" />
+                        <div className="py-5 pl-6 pr-5">
+                          <div className="flex items-center justify-between">
+                            <p className="dth-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A4FD6]">
+                              Founding learner pass
+                            </p>
+                            <p className="dth-mono text-[10px] uppercase tracking-[0.2em] text-slate-400">Admit one</p>
+                          </div>
+                          <p className="dth-mono mt-4 text-4xl font-bold tracking-tight text-[#0A1F44]">
+                            {position ? `#${String(position).padStart(4, '0')}` : 'FOUNDING'}
+                          </p>
+                          <p className="mt-1 text-xs text-slate-500">DiscoveryTech Academy · Opening soon</p>
+                          <div className="my-4 border-t border-dashed border-slate-300" />
+                          <p className="dth-mono text-[10px] uppercase tracking-[0.2em] text-slate-400">Reserved for</p>
+                          <p className="dth-mono mt-1 truncate text-sm text-[#0A1F44]">{cleanEmail}</p>
+                        </div>
+                      </motion.div>
+
+                      {/* Share */}
+                      <p className="mt-6 text-sm font-semibold text-[#0A1F44]">Share your pass</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {shareLinks.map((s) => (
+                          <a
+                            key={s.label}
+                            href={s.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                          >
+                            {s.label}
+                          </a>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={copyLink}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                        >
+                          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                          {copied ? 'Copied' : 'Copy link'}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </div>
+
+            {/* Map */}
+            <div className="order-2">
+              <NigeriaCard reduce={reduce} />
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-500">
+          © {new Date().getFullYear()} DiscoveryTech Hub · Abuja, Nigeria
+        </footer>
+      </div>
+    </>
+  );
+}
