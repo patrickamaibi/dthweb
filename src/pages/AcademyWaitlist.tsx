@@ -3,22 +3,27 @@ import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, ArrowUp, Check, Copy, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUp, Check, Copy, MessageCircle, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase'; // same path your Review.tsx uses
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const LOGO_SRC = '/logo.png'; // change if your logo file is named differently
-const PAGE_URL = 'https://discoverytechhub.com/academy/waitlist?ref=share';
 const SHARE_TEXT = 'I just reserved my seat for DiscoveryTech Academy. Join the waitlist:';
 
 /* ---------------------------- SEO / GEO / OG ---------------------------- */
+/* Keep these in sync with scripts/inject-waitlist-seo.mjs */
 const SITE_URL = 'https://discoverytechhub.com';
 const CANONICAL = `${SITE_URL}/academy/waitlist`;
 const SEO_TITLE = 'DiscoveryTech Academy | Join the Waitlist';
 const SEO_DESCRIPTION =
   'Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub.';
 const OG_IMAGE = `${SITE_URL}/ogwaitlist.webp`; // lives in /public
+const OG_IMAGE_TYPE = OG_IMAGE.endsWith('.png')
+  ? 'image/png'
+  : OG_IMAGE.endsWith('.webp')
+    ? 'image/webp'
+    : 'image/jpeg';
 const OG_IMAGE_ALT = 'DiscoveryTech Academy waitlist: practical AI skills, opening soon in Nigeria';
 
 const JSON_LD = {
@@ -53,11 +58,62 @@ const JSON_LD = {
   ],
 };
 
+/* ------------------------------ Sharing ------------------------------ */
+/* Each channel gets its own ?ref= so the waitlist source column shows where signups come from */
+const shareUrl = (channel: string) => `${CANONICAL}?ref=${channel}`;
+const enc = encodeURIComponent;
+
+const ICON_CLS = 'h-3.5 w-3.5';
+
+function IconWhatsApp() {
+  return <MessageCircle className={ICON_CLS} aria-hidden />;
+}
+
+function IconFacebook() {
+  return (
+    <svg viewBox="0 0 24 24" className={ICON_CLS} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function IconX() {
+  return (
+    <svg viewBox="0 0 24 24" className={ICON_CLS} fill="currentColor" aria-hidden>
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  );
+}
+
+function IconLinkedIn() {
+  return (
+    <svg viewBox="0 0 24 24" className={ICON_CLS} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function IconInstagram() {
+  return (
+    <svg viewBox="0 0 24 24" className={ICON_CLS} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" />
+    </svg>
+  );
+}
+
 const shareLinks = [
-  { label: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${SHARE_TEXT} ${PAGE_URL}`)}` },
-  { label: 'X', href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(PAGE_URL)}` },
-  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(PAGE_URL)}` },
+  { key: 'whatsapp', label: 'WhatsApp', Icon: IconWhatsApp, href: `https://wa.me/?text=${enc(`${SHARE_TEXT} ${shareUrl('whatsapp')}`)}` },
+  { key: 'facebook', label: 'Facebook', Icon: IconFacebook, href: `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl('facebook'))}` },
+  { key: 'x', label: 'X', Icon: IconX, href: `https://twitter.com/intent/tweet?text=${enc(SHARE_TEXT)}&url=${enc(shareUrl('x'))}` },
+  { key: 'linkedin', label: 'LinkedIn', Icon: IconLinkedIn, href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(shareUrl('linkedin'))}` },
 ];
+
+const SHARE_BTN =
+  'inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50';
 
 const perks = ['Free to join', 'Early access before launch', 'Practical AI skills, no coding'];
 
@@ -446,7 +502,7 @@ export default function AcademyWaitlist() {
   const [message, setMessage] = useState('');
   const [position, setPosition] = useState<number | null>(null);
   const [already, setAlready] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<'link' | 'instagram' | null>(null);
 
   const cleanEmail = email.trim().toLowerCase();
 
@@ -488,14 +544,37 @@ export default function AcademyWaitlist() {
     }
   };
 
-  const copyLink = async () => {
+  const flashCopied = (which: 'link' | 'instagram') => {
+    setCopied(which);
+    setTimeout(() => setCopied(null), 2200);
+  };
+
+  const copyText = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(PAGE_URL);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(text);
+      return true;
     } catch {
-      /* clipboard blocked: ignore */
+      return false; // clipboard blocked
     }
+  };
+
+  const copyLink = async () => {
+    if (await copyText(shareUrl('link'))) flashCopied('link');
+  };
+
+  /* Instagram has no web share URL. Phones get the native share sheet (pick Instagram there);
+     desktop copies the link and opens Instagram so it can be pasted. */
+  const shareInstagram = async () => {
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: SEO_TITLE, text: SHARE_TEXT, url: shareUrl('instagram') });
+        return;
+      } catch (err) {
+        if ((err as DOMException)?.name === 'AbortError') return; // user closed the sheet
+      }
+    }
+    if (await copyText(shareUrl('instagram'))) flashCopied('instagram');
+    window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
   };
 
   const rise = (delay: number) => ({
@@ -522,7 +601,7 @@ export default function AcademyWaitlist() {
         <meta property="og:description" content={SEO_DESCRIPTION} />
         <meta property="og:url" content={CANONICAL} />
         <meta property="og:image" content={OG_IMAGE} />
-        <meta property="og:image:type" content="image/webp" />
+        <meta property="og:image:type" content={OG_IMAGE_TYPE} />
         <meta property="og:image:alt" content={OG_IMAGE_ALT} />
 
         {/* X / Twitter */}
@@ -698,24 +777,19 @@ export default function AcademyWaitlist() {
                       {/* Share */}
                       <p className="mt-6 text-sm font-semibold text-[#0A1F44]">Share your pass</p>
                       <div className="mt-3 flex flex-wrap gap-2">
-                        {shareLinks.map((s) => (
-                          <a
-                            key={s.label}
-                            href={s.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
-                          >
-                            {s.label}
+                        {shareLinks.map(({ key, label, href, Icon }) => (
+                          <a key={key} href={href} target="_blank" rel="noopener noreferrer" className={SHARE_BTN}>
+                            <Icon />
+                            {label}
                           </a>
                         ))}
-                        <button
-                          type="button"
-                          onClick={copyLink}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
-                        >
-                          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                          {copied ? 'Copied' : 'Copy link'}
+                        <button type="button" onClick={shareInstagram} className={SHARE_BTN}>
+                          <IconInstagram />
+                          {copied === 'instagram' ? 'Link copied' : 'Instagram'}
+                        </button>
+                        <button type="button" onClick={copyLink} className={SHARE_BTN}>
+                          {copied === 'link' ? <Check className={ICON_CLS} /> : <Copy className={ICON_CLS} />}
+                          {copied === 'link' ? 'Copied' : 'Copy link'}
                         </button>
                       </div>
                     </motion.div>
