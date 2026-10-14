@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="en" class=""><head>
+    <meta charset="UTF-8">
+
+    <!-- ✅ STATIC PRELOADER (paints on first frame, removed by Preloader.tsx) -->
+    <link rel="preload" as="image" href="/logo.png">
+    <style>
+      #static-preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: #ffffff; transition: opacity 0.5s ease-in-out;
+      }
+      html.dark #static-preloader { background: #030712; }
+      #static-preloader.hide { opacity: 0; pointer-events: none; }
+
+      /* Same entrance as the original: scale 0.8 -> 1 and fade in, 0.8s, backOut */
+      #static-preloader .inner {
+        text-align: center;
+        animation: dth-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes dth-pop {
+        from { transform: scale(0.8); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+      }
+
+      #static-preloader img {
+        display: block; margin: 0 auto 2rem;
+        height: 6rem; width: auto; -o-object-fit: contain; object-fit: contain;
+      }
+      @media (min-width: 768px) { #static-preloader img { height: 8rem; } }
+
+      #static-preloader .bar {
+        height: 4px; width: 12rem; margin: 0 auto;
+        border-radius: 9999px; background: #dbeafe; overflow: hidden;
+      }
+      html.dark #static-preloader .bar { background: #374151; }
+      #static-preloader .bar span {
+        display: block; height: 100%; width: 0; border-radius: 9999px; background: #2563eb;
+        animation: dth-load 1.5s ease-in-out forwards;
+      }
+      html.dark #static-preloader .bar span { background: #3b82f6; }
+      @keyframes dth-load { to { width: 100%; } }
+    </style>
+    <noscript><style>#static-preloader { display: none; }</style></noscript>
+
+    <!-- ✅ ANTI-FLASH (FOUC) PROTECTION -->
+    <script>
+      (function () {
+        try {
+          const savedTheme = localStorage.getItem('theme');
+          const root = document.documentElement;
+          if (savedTheme === 'dark') {
+            root.classList.add('dark');
+          } else if (savedTheme === 'light') {
+            root.classList.remove('dark');
+          } else {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              root.classList.add('dark');
+            } else {
+              root.classList.remove('dark');
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- ✅ FAVICON SUITE -->
+    <link rel="icon" type="image/svg+xml" href="/dth1-rounded.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <meta name="keywords" content="web design Nigeria, software development Nigeria, AI solutions, mobile app development, e-commerce development, digital marketing, IT training, ICT consultancy, gadgets supply and maintenance, Abuja, DiscoveryTech Hub">
+    
+
+    <!-- Google Analytics -->
+    <script>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-NCE7K80751';
+        s.async = true;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-NCE7K80751');
+      });
+    </script>
+
+    <!-- Primary Meta Tags -->
+    <!-- Twitter -->
+    
+    <!-- Open Graph -->
+    
+    
+    
+    
+    
+
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://discoverytechhub.com/#organization",
+        "name": "DiscoveryTech Hub",
+        "alternateName": "DTH",
+        "parentOrganization": { "@type": "Organization", "name": "DiscoveryHub" },
+        "description": "DiscoveryTech Hub offers web design, software development, AI solutions, mobile apps, e-commerce, digital marketing, IT training, ICT consultancy, and gadgets supply and maintenance in Nigeria and across Africa.",
+        "url": "https://discoverytechhub.com",
+        "logo": "https://discoverytechhub.com/logo.png",
+        "image": "https://discoverytechhub.com/og.png",
+        "telephone": ["+2349047465802", "+2348076854730"],
+        "email": "info@discoverytechhub.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Plot 740 Aminu Kano Crescent, Wuse 2, FCT Abuja",
+          "addressLocality": "Abuja",
+          "addressRegion": "FCT",
+          "addressCountry": "NG"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+2349047465802",
+          "contactType": "customer service",
+          "email": "info@discoverytechhub.com",
+          "areaServed": "NG",
+          "availableLanguage": "English"
+        },
+        "areaServed": [
+          { "@type": "Country", "name": "Nigeria" },
+          { "@type": "Continent", "name": "Africa" }
+        ],
+        "serviceType": [
+          "Web Design, Development & Hosting",
+          "Software Development & IT Consultancy",
+          "AI Solutions & Automation",
+          "ICT Solutions & Systems Integration",
+          "Digital Marketing & Social Media Management",
+          "Mobile Application Development",
+          "E-Commerce Development & Management",
+          "IT Training & Technical Support",
+          "Gadgets Supply & Maintenance"
+        ],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+            "opens": "08:00",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "09:00",
+            "closes": "15:00"
+          }
+        ],
+        "sameAs": [
+          "https://www.facebook.com/disctechhub",
+          "https://x.com/disctechhub",
+          "https://www.linkedin.com/company/discoverytechhub",
+          "https://www.instagram.com/discoverytechhub",
+          "https://www.tiktok.com/@discoverytechhub"
+        ]
+      }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <script type="module" crossorigin="" src="/assets/index-ClFkVdHq.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/index-dumfaKX2.css">
+  <meta name="author" content="DiscoveryTech Hub" data-rh="true"><script type="application/ld+json" data-rh="true">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does DiscoveryTech Hub do?","acceptedAnswer":{"@type":"Answer","text":"DiscoveryTech Hub is an ICT solutions company in Abuja, Nigeria, and the technology division of DiscoveryHub. We offer web design and development, ICT training, graphic design, branding and identity, printing, proposal and report writing, and ICT consultancy for businesses, organizations, and individuals across Nigeria and beyond."}},{"@type":"Question","name":"Where is DiscoveryTech Hub located?","acceptedAnswer":{"@type":"Answer","text":"We are based at Plot 740 Aminu Kano Crescent, Wuse 2, FCT Abuja, Abuja, Nigeria, and we also work with clients remotely."}},{"@type":"Question","name":"What are your working hours?","acceptedAnswer":{"@type":"Answer","text":"We are open Monday to Friday from 8:00 AM to 6:00 PM and on Saturdays from 9:00 AM to 3:00 PM."}},{"@type":"Question","name":"How do I get a quote?","acceptedAnswer":{"@type":"Answer","text":"Send your request through the Get a Quote page on this website, or email info@discoverytechhub.com. You can also call +234 904 746 5802 or +234 807 685 4730."}},{"@type":"Question","name":"Do you offer ICT training for companies and individuals?","acceptedAnswer":{"@type":"Answer","text":"Yes. Our hands-on ICT training is open to individuals, students, and organizations, with levels from beginner to advanced and corporate training available. Courses cover programming, Microsoft Office, graphic design, web technologies, and cybersecurity basics."}},{"@type":"Question","name":"How does a project with DiscoveryTech Hub work?","acceptedAnswer":{"@type":"Answer","text":"Every project follows six steps: Discover, Strategize, Design & Develop, Review & Refine, Deliver & Deploy, and Support & Grow."}},{"@type":"Question","name":"Can I rent a meeting or training space from you?","acceptedAnswer":{"@type":"Answer","text":"Yes. The DiscoveryTech Hub space in Abuja seats up to 22 people and costs ₦80,000 for a full day, negotiable for multi-day bookings. See the Hub page for amenities and booking."}}]}</script>
+    <title data-rh="true">DiscoveryTech Academy | Join the Waitlist</title>
+    <meta name="description" content="Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub." data-rh="true" />
+    <meta name="robots" content="index, follow, max-image-preview:large" data-rh="true" />
+    <link rel="canonical" href="https://discoverytechhub.com/academy/waitlist" data-rh="true" />
+    <link rel="alternate" hreflang="en-NG" href="https://discoverytechhub.com/academy/waitlist" data-rh="true" />
+    <link rel="alternate" hreflang="x-default" href="https://discoverytechhub.com/academy/waitlist" data-rh="true" />
+    <meta property="og:type" content="website" data-rh="true" />
+    <meta property="og:site_name" content="DiscoveryTech Hub" data-rh="true" />
+    <meta property="og:locale" content="en_NG" data-rh="true" />
+    <meta property="og:title" content="DiscoveryTech Academy | Join the Waitlist" data-rh="true" />
+    <meta property="og:description" content="Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub." data-rh="true" />
+    <meta property="og:url" content="https://discoverytechhub.com/academy/waitlist" data-rh="true" />
+    <meta property="og:image" content="https://discoverytechhub.com/ogwaitlist.webp" data-rh="true" />
+    <meta property="og:image:type" content="image/webp" data-rh="true" />
+    <meta property="og:image:alt" content="DiscoveryTech Academy waitlist: practical AI skills, opening soon in Nigeria" data-rh="true" />
+    <meta name="twitter:card" content="summary_large_image" data-rh="true" />
+    <meta name="twitter:title" content="DiscoveryTech Academy | Join the Waitlist" data-rh="true" />
+    <meta name="twitter:description" content="Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub." data-rh="true" />
+    <meta name="twitter:image" content="https://discoverytechhub.com/ogwaitlist.webp" data-rh="true" />
+    <meta name="twitter:image:alt" content="DiscoveryTech Academy waitlist: practical AI skills, opening soon in Nigeria" data-rh="true" />
+    <script type="application/ld+json" data-rh="true">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://discoverytechhub.com/academy/waitlist#webpage","url":"https://discoverytechhub.com/academy/waitlist","name":"DiscoveryTech Academy | Join the Waitlist","description":"Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub.","inLanguage":"en-NG","isPartOf":{"@type":"WebSite","name":"DiscoveryTech Hub","url":"https://discoverytechhub.com"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://discoverytechhub.com/ogwaitlist.webp"},"about":"DiscoveryTech Academy, an online AI skills learning platform opening soon","contentLocation":{"@type":"Place","name":"Abuja, Nigeria"},"publisher":{"@type":"Organization","name":"DiscoveryTech Hub","url":"https://discoverytechhub.com","logo":"https://discoverytechhub.com/logo.png","address":{"@type":"PostalAddress","addressLocality":"Abuja","addressCountry":"NG"}}}]}</script>
+  </head>
+
+  <body class="antialiased min-h-screen flex flex-col scroll-smooth" style="overflow: auto;">
+    <noscript><h1>DiscoveryTech Academy | Join the Waitlist</h1><p>Join the free DiscoveryTech Academy waitlist and get early access to practical, no-code AI skills. Built in Abuja, Nigeria by DiscoveryTech Hub.</p></noscript>
+    <!-- Static preloader: visible from first paint, removed by Preloader.tsx -->
+    <div id="static-preloader" aria-hidden="true">
+      <div class="inner">
+        <img src="/logo.png" alt="">
+        <div class="bar"><span></span></div>
+      </div>
+    </div>
+    <script>
+      // Failsafe: never leave visitors stuck on the preloader if the app fails to load
+      (function () {
+        if (window.__PRERENDER__) return;
+        setTimeout(function () {
+          var el = document.getElementById('static-preloader');
+          if (!el) return;
+          el.classList.add('hide');
+          setTimeout(function () { el.remove(); }, 500);
+        }, 4000);
+      })();
+    </script>
+
+    <div id="root" class="flex-grow flex flex-col"></div>
+  
+</body></html>
