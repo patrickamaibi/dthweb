@@ -4,7 +4,25 @@ const ALLOWED = ["https://discoverytechhub.com", "https://www.discoverytechhub.c
 
 const FROM = Deno.env.get("FROM_EMAIL") ?? "DiscoveryTech Academy <academy@discoverytechhub.com>";
 const REPLY_TO = "info@discoverytechhub.com";
-const LOGO_URL = "https://discoverytechhub.com/logo.png"; // must be a PNG or JPG that exists on the live site
+const WHATSAPP_URL = Deno.env.get("WHATSAPP_GROUP_URL") ?? "";
+
+const communityBlock = () =>
+  WHATSAPP_URL
+    ? `
+   <tr><td style="padding:8px 40px 16px;">
+     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0e2a2d;border:1px solid #1f4d45;border-left:6px solid #25D366;border-radius:16px;">
+      <tr><td style="padding:22px 24px;">
+        <p style="margin:0;font-family:'Courier New',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6ee7b7;font-weight:700;">Stay in the loop</p>
+        <p style="margin:10px 0 6px;font-size:18px;font-weight:700;line-height:1.4;color:#ffffff;">Join our WhatsApp community</p>
+        <p style="margin:0 0 18px;font-size:14px;line-height:1.7;color:#b6c2e2;">Get launch updates, early announcements and practical tips straight to your phone. It's the fastest way to know when the Academy opens.</p>
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="#128C7E" style="border-radius:10px;">
+          <a href="${WHATSAPP_URL}" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:10px;">Join the WhatsApp group</a>
+        </td></tr></table>
+        <p style="margin:14px 0 0;font-size:12px;line-height:1.6;color:#7f93b8;">Or copy this link: ${WHATSAPP_URL}</p>
+      </td></tr>
+     </table>
+   </td></tr>`
+    : "";
 
 const cors = (origin: string | null) => ({
   "Access-Control-Allow-Origin": origin && ALLOWED.includes(origin) ? origin : ALLOWED[0],
@@ -34,7 +52,6 @@ const emailHtml = (position: number | null) => {
   <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#0b1530;border:1px solid #1e2d5a;border-radius:24px;overflow:hidden;font-family:Inter,Arial,sans-serif;">
    <tr><td style="height:6px;background:linear-gradient(90deg,#2563eb,#22d3ee);font-size:0;">&nbsp;</td></tr>
    <tr><td style="padding:36px 40px 8px;">
-     <img src="${LOGO_URL}" width="56" height="56" alt="DiscoveryTech Hub" style="display:block;width:56px;height:56px;border-radius:14px;margin:0 0 18px;background:#ffffff;">
      <p style="margin:0;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#60a5fa;font-weight:700;">DiscoveryTech Academy</p>
      <h1 style="margin:14px 0 0;font-size:30px;line-height:1.2;color:#ffffff;">Your seat is reserved. &#127881;</h1>
    </td></tr>
@@ -51,6 +68,7 @@ const emailHtml = (position: number | null) => {
       </td></tr>
      </table>
    </td></tr>
+   ${communityBlock()}
    <tr><td style="padding:8px 40px 36px;">
      <a href="https://discoverytechhub.com" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:14px 28px;border-radius:12px;">Visit DiscoveryTech Hub</a>
    </td></tr>

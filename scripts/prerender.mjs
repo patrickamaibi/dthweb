@@ -6,7 +6,7 @@ import puppeteer from 'puppeteer';
 
 const DIST = resolve('dist');
 const PORT = 4173;
-const ROUTES = ['/', '/about', '/services', '/quote', '/hub', '/testimonials', '/socials'];
+const ROUTES = ['/', '/about', '/services', '/quote', '/hub', '/testimonials', '/socials', '/academy'];
 
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
